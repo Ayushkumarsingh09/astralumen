@@ -1,81 +1,75 @@
 # AstraLumen
 
-World-class science, space & discovery platform
+> World-class science, space & discovery platform
 
-**Live:** [https://astralumen.science](https://astralumen.science)  
-**Repository:** https://github.com/Ayushkumarsingh09/astralumen
+[![Live Demo](https://img.shields.io/badge/Live-Demo-0ea5e9?style=for-the-badge)](https://astralumen.science)
+[![GitHub](https://img.shields.io/badge/GitHub-astralumen-181717?style=for-the-badge&logo=github)](https://github.com/Ayushkumarsingh09/astralumen)
+
+**Live website:** [https://astralumen.science](https://astralumen.science)
 
 Science and space discovery platform covering astronomy, missions, physics explainers, and cosmic exploration.
-
 
 ## Screenshots
 
 ### Homepage
 
-![AstraLumen screenshot](docs/screenshots/homepage.png)
+![AstraLumen homepage](docs/screenshots/homepage.png)
 
-> Captured from the live project UI.
+Live preview: [https://astralumen.science](https://astralumen.science)
 
-## Features
+## Highlights
 
-- Modern source structure under `src/` with typed modules
-- Rich educational / editorial content collection
-- Optimized public assets, branding, and social previews
-- SEO foundations: metadata, sitemap/robots, and share cards
-- Production-ready configuration for static or Node hosting
-- Live deployment target: [astralumen.science](https://astralumen.science)
+- Science, space, and discovery publishing platform
+- Astronomy, missions, and physics explainers in long-form format
+- Astro + MDX content architecture
+- Visual, education-first reading experience
+- SEO and static hosting readiness
 
 ## Tech Stack
 
-- Astro
-- TypeScript
-- MDX
+| Layer | Technology |
+|-------|------------|
+| Core | Astro, TypeScript, MDX |
+| Author | Ayush |
+| Homepage | https://astralumen.science |
 
 ## Quick Start
 
 ```bash
-# Install dependencies (if package.json is present)
+# Clone
+git clone https://github.com/Ayushkumarsingh09/astralumen.git
+cd astralumen
+
+# Install (Node projects)
 npm install
 
-# Start local development
+# Develop
 npm run dev
+
+# Production build
+npm run build
 ```
 
-> Some projects are PHP/WordPress packages — follow their deployment docs in `docs/` or `DEPLOY*.md` instead of `npm run dev`.
+For WordPress/PHP packages, skip `npm` and follow the deployment docs in `docs/` / `DEPLOY*.md`.
 
-## Scripts
-
-| Command | Description |
-|---------|-------------|
-| `npm run dev` | Local development server |
-| `npm run build` | Production build |
-| `npm run lint` | Lint source (when configured) |
-
-## Project Structure
+## Repository Layout
 
 ```text
-.
-├── src/ or app source        # Application code
-├── public/ or assets/        # Static assets
-├── docs/                     # Deployment & operations notes
-├── scripts/                  # Maintenance / content generators
-└── README.md                 # You are here
+src/, public/, docs/, scripts/
+README.md
 ```
 
 ## Deployment
 
-This project is prepared for production hosting (Hostinger / Vercel / static export / PHP hosting depending on stack).
-
-1. Configure environment variables from `.env.example` (when present)
-2. Build or upload according to the project stack
-3. Point the domain to the hosting target
-4. Verify the live URL: https://astralumen.science
+1. Configure environment values from `.env.example` when present
+2. Build or upload according to the stack above
+3. Point DNS to your host
+4. Verify production at https://astralumen.science
 
 ## Author
 
-**Ayush**  
-GitHub: [Ayushkumarsingh09](https://github.com/Ayushkumarsingh09)
+Built and maintained by **Ayush** ([@Ayushkumarsingh09](https://github.com/Ayushkumarsingh09)).
 
 ## License
 
-All rights reserved © AstraLumen. Source is published for portfolio and deployment use unless otherwise noted.
+All rights reserved © AstraLumen. Published for portfolio and deployment use.
