@@ -2,10 +2,10 @@
 
 > World-class science, space & discovery platform
 
-[![Live Demo](https://img.shields.io/badge/Live-Demo-0ea5e9?style=for-the-badge)](https://astralumen.science)
+[![Live Demo](https://img.shields.io/badge/Live_Demo-Vercel-0ea5e9?style=for-the-badge)](https://astralumen.vercel.app)
 [![GitHub](https://img.shields.io/badge/GitHub-astralumen-181717?style=for-the-badge&logo=github)](https://github.com/Ayushkumarsingh09/astralumen)
 
-**Live website:** [https://astralumen.science](https://astralumen.science)
+**Live demo:** [https://astralumen.vercel.app](https://astralumen.vercel.app)
 
 Science and space discovery platform covering astronomy, missions, physics explainers, and cosmic exploration.
 
@@ -14,8 +14,6 @@ Science and space discovery platform covering astronomy, missions, physics expla
 ### Homepage
 
 ![AstraLumen homepage](docs/screenshots/homepage.png)
-
-Live preview: [https://astralumen.science](https://astralumen.science)
 
 ## Highlights
 
@@ -31,22 +29,15 @@ Live preview: [https://astralumen.science](https://astralumen.science)
 |-------|------------|
 | Core | Astro, TypeScript, MDX |
 | Author | Ayush |
-| Homepage | https://astralumen.science |
+| Live demo | https://astralumen.vercel.app |
 
 ## Quick Start
 
 ```bash
-# Clone
 git clone https://github.com/Ayushkumarsingh09/astralumen.git
 cd astralumen
-
-# Install (Node projects)
 npm install
-
-# Develop
 npm run dev
-
-# Production build
 npm run build
 ```
 
@@ -61,10 +52,10 @@ README.md
 
 ## Deployment
 
-1. Configure environment values from `.env.example` when present
-2. Build or upload according to the stack above
-3. Point DNS to your host
-4. Verify production at https://astralumen.science
+Demo hosting: **Vercel**
+
+- Live demo: https://astralumen.vercel.app
+- Source: https://github.com/Ayushkumarsingh09/astralumen
 
 ## Author
 
