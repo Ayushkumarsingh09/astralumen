@@ -1,0 +1,60 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 630" role="img" aria-label="AstraLumen � Illuminate the Universe of Science">
+  <defs>
+    <linearGradient id="bg" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#050510"/>
+      <stop offset="40%" stop-color="#0a0a1a"/>
+      <stop offset="100%" stop-color="#1a1040"/>
+    </linearGradient>
+    <linearGradient id="accent" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%" stop-color="#7c3aed"/>
+      <stop offset="50%" stop-color="#06b6d4"/>
+      <stop offset="100%" stop-color="#fbbf24"/>
+    </linearGradient>
+    <radialGradient id="nebula" cx="75%" cy="30%" r="45%">
+      <stop offset="0%" stop-color="#7c3aed" stop-opacity="0.35"/>
+      <stop offset="100%" stop-color="#7c3aed" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="aurora" cx="20%" cy="70%" r="40%">
+      <stop offset="0%" stop-color="#06b6d4" stop-opacity="0.25"/>
+      <stop offset="100%" stop-color="#06b6d4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge>
+        <feMergeNode in="blur"/>
+        <feMergeNode in="SourceGraphic"/>
+      </feMerge>
+    </filter>
+  </defs>
+
+  <rect width="1200" height="630" fill="url(#bg)"/>
+  <rect width="1200" height="630" fill="url(#nebula)"/>
+  <rect width="1200" height="630" fill="url(#aurora)"/>
+
+  <!-- Stars -->
+  <circle cx="120" cy="90" r="2" fill="#e2e8f0" opacity="0.6"/>
+  <circle cx="980" cy="120" r="1.5" fill="#e2e8f0" opacity="0.5"/>
+  <circle cx="1050" cy="480" r="2" fill="#e2e8f0" opacity="0.4"/>
+  <circle cx="180" cy="520" r="1.2" fill="#06b6d4" opacity="0.7"/>
+  <circle cx="900" cy="380" r="1" fill="#fbbf24" opacity="0.8"/>
+  <circle cx="60" cy="300" r="1.5" fill="#e2e8f0" opacity="0.35"/>
+  <circle cx="1100" cy="200" r="1.2" fill="#a78bfa" opacity="0.5"/>
+
+  <!-- Logo mark -->
+  <g transform="translate(100, 215)" filter="url(#glow)">
+    <circle cx="100" cy="100" r="90" fill="none" stroke="url(#accent)" stroke-width="3" opacity="0.5"/>
+    <ellipse cx="100" cy="100" rx="65" ry="24" fill="none" stroke="url(#accent)" stroke-width="1.5" opacity="0.35" transform="rotate(-20 100 100)"/>
+    <circle cx="100" cy="100" r="16" fill="url(#accent)"/>
+    <circle cx="100" cy="35" r="8" fill="#fbbf24"/>
+    <path d="M100 100 L100 175" stroke="url(#accent)" stroke-width="4" stroke-linecap="round" opacity="0.6"/>
+  </g>
+
+  <!-- Text -->
+  <text x="340" y="290" font-family="'Orbitron', 'Segoe UI', sans-serif" font-size="72" font-weight="700" fill="#e2e8f0" letter-spacing="0.06em">AstraLumen</text>
+  <text x="340" y="360" font-family="'Inter', 'Segoe UI', sans-serif" font-size="32" font-weight="400" fill="#94a3b8">Illuminate the Universe of Science</text>
+  <text x="340" y="420" font-family="'Inter', 'Segoe UI', sans-serif" font-size="22" font-weight="500" fill="#06b6d4" letter-spacing="0.12em">SPACE � EARTH � BIOLOGY � PHYSICS � DISCOVERY</text>
+
+  <!-- Bottom accent bar -->
+  <rect x="100" y="560" width="1000" height="4" rx="2" fill="url(#accent)" opacity="0.8"/>
+  <text x="100" y="600" font-family="'Inter', 'Segoe UI', sans-serif" font-size="18" fill="#64748b">astralumen.science</text>
+</svg>
