@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Dr. James Whitfield">
+  <circle cx="48" cy="48" r="48" fill="#fbbf24"/>
+  <circle cx="48" cy="48" r="44" fill="#fbbf24" stroke="#fcd34d" stroke-width="2"/>
+  <text x="48" y="56" text-anchor="middle" font-family="'Inter', 'Segoe UI', sans-serif" font-size="28" font-weight="600" fill="#050510">JW</text>
+</svg>

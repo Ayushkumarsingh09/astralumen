@@ -1,0 +1,5 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 96 96" role="img" aria-label="Dr. Sarah Okonkwo">
+  <circle cx="48" cy="48" r="48" fill="#06b6d4"/>
+  <circle cx="48" cy="48" r="44" fill="#06b6d4" stroke="#22d3ee" stroke-width="2"/>
+  <text x="48" y="56" text-anchor="middle" font-family="'Inter', 'Segoe UI', sans-serif" font-size="28" font-weight="600" fill="#ffffff">SO</text>
+</svg>

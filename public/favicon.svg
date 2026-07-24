@@ -1,0 +1,20 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 32 32" role="img" aria-label="AstraLumen">
+  <defs>
+    <radialGradient id="glow" cx="50%" cy="45%" r="55%">
+      <stop offset="0%" stop-color="#a78bfa"/>
+      <stop offset="55%" stop-color="#7c3aed"/>
+      <stop offset="100%" stop-color="#2d1b69"/>
+    </radialGradient>
+    <linearGradient id="beam" x1="0%" y1="0%" x2="100%" y2="100%">
+      <stop offset="0%" stop-color="#22d3ee"/>
+      <stop offset="100%" stop-color="#06b6d4"/>
+    </linearGradient>
+  </defs>
+  <rect width="32" height="32" rx="7" fill="#050510"/>
+  <circle cx="16" cy="15" r="9" fill="url(#glow)"/>
+  <path d="M16 4 L17.2 12.5 L16 11.5 L14.8 12.5 Z" fill="#fbbf24"/>
+  <path d="M16 26 L14.8 17.5 L16 18.5 L17.2 17.5 Z" fill="url(#beam)" opacity="0.85"/>
+  <circle cx="16" cy="15" r="2.2" fill="#e2e8f0"/>
+  <circle cx="22.5" cy="9.5" r="1" fill="#fbbf24" opacity="0.9"/>
+  <circle cx="9" cy="20" r="0.7" fill="#22d3ee" opacity="0.8"/>
+</svg>
