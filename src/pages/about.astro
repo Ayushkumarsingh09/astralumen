@@ -1,0 +1,111 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import AuthorCard from '@components/AuthorCard.astro';
+import { AUTHORS } from '@/data/authors';
+import { SITE } from '@/config/site';
+---
+
+<PageLayout
+  title="About AstraLumen — Our Mission & Editorial Team"
+  description="Learn about AstraLumen's mission to make science and space education accessible, accurate, and inspiring for learners worldwide."
+  breadcrumbs={[{ label: 'About' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Who We Are</span>
+      <h1>About {SITE.name}</h1>
+      <p class="hero-lead">
+        {SITE.name} is a digital science museum and space observatory dedicated to illuminating
+        the universe of science for curious minds everywhere.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <h2>Our Mission</h2>
+      <p>
+        We believe that understanding science should be as awe-inspiring as the cosmos itself.
+        {SITE.name} was founded in {SITE.founded} with a clear purpose: to deliver rigorously
+        researched, beautifully presented science education that is free and accessible to
+        everyone — from students and educators to lifelong learners exploring the night sky.
+      </p>
+      <p>
+        Our content spans astronomy, Earth science, biology, physics, chemistry, and hands-on
+        experiments. Every article is written and reviewed by qualified scientists and educators
+        who share a passion for accurate, engaging science communication.
+      </p>
+
+      <blockquote>
+        Science is not just a collection of facts — it is a way of understanding our place in
+        the universe. {SITE.name} exists to make that journey accessible to all.
+      </blockquote>
+
+      <h2>What We Offer</h2>
+      <ul>
+        <li><strong>In-depth articles</strong> — Expert-written guides across 18 science topics</li>
+        <li><strong>Interactive science tools</strong> — Calculators, converters, and explorers</li>
+        <li><strong>Science facts & news</strong> — Evergreen educational coverage of discoveries</li>
+        <li><strong>Classroom-ready experiments</strong> — Safe, hands-on activities for all ages</li>
+      </ul>
+
+      <h2>Editorial Standards</h2>
+      <p>
+        Accuracy is non-negotiable. Our <a href="/editorial-policy">editorial policy</a> requires
+        peer review by subject-matter experts, citation of primary sources, and regular content
+        updates as science evolves. We follow a transparent
+        <a href="/corrections-policy">corrections policy</a> and welcome reader feedback.
+      </p>
+    </div>
+  </section>
+
+  <section class="section team-section">
+    <div class="container">
+      <div class="section-header">
+        <span class="section-label">The Team</span>
+        <h2 class="section-title">Our Editorial Team</h2>
+        <p class="section-subtitle">
+          Scientists, educators, and science communicators who review and shape every piece of content.
+        </p>
+      </div>
+      <div class="authors-grid">
+        {AUTHORS.map((author) => (
+          <AuthorCard author={author} />
+        ))}
+      </div>
+      <p class="team-cta">
+        <a href="/authors" class="btn btn-secondary">View All Author Profiles</a>
+      </p>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-lead {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 680px;
+    margin: var(--space-lg) auto 0;
+  }
+
+  .team-section {
+    padding-bottom: var(--space-4xl);
+  }
+
+  .authors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-xl);
+    margin-bottom: var(--space-2xl);
+  }
+
+  .team-cta {
+    text-align: center;
+    margin: 0;
+  }
+</style>

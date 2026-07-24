@@ -1,0 +1,70 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import AuthorCard from '@components/AuthorCard.astro';
+import { AUTHORS } from '@/data/authors';
+---
+
+<PageLayout
+  title="Our Authors & Science Editors"
+  description="Meet the scientists, educators, and science communicators who research, write, and review AstraLumen's educational content."
+  breadcrumbs={[{ label: 'Authors' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="hero-icon" aria-hidden="true">👩‍🔬</span>
+      <h1>Our Authors</h1>
+      <p class="hero-lead">
+        Credentialed scientists and educators behind every article.
+      </p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <p class="intro-text">
+        Each member of our editorial team holds advanced degrees in their field and
+        reviews content within their area of expertise. Learn more about our
+        <a href="/editorial-policy">editorial standards</a>.
+      </p>
+      <div class="authors-grid">
+        {AUTHORS.map((author) => (
+          <AuthorCard author={author} />
+        ))}
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-lead {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-top: var(--space-md);
+  }
+
+  .intro-text {
+    text-align: center;
+    max-width: 640px;
+    margin: 0 auto var(--space-3xl);
+    color: var(--text-secondary);
+    font-size: 1.0625rem;
+  }
+
+  .authors-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(340px, 1fr));
+    gap: var(--space-xl);
+    padding-bottom: var(--space-4xl);
+  }
+</style>

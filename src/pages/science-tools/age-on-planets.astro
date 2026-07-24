@@ -1,0 +1,83 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const ORBITAL_PERIODS = {
+  Mercury: 88, Venus: 225, Earth: 365.25, Mars: 687, Jupiter: 4333,
+  Saturn: 10759, Uranus: 30687, Neptune: 60190,
+};
+
+const faqs = [
+  { question: 'Why do we age differently on other planets?', answer: 'A planet\'s "year" is the time it takes to orbit the Sun. Since each planet has a different orbital period, you would complete a different number of orbits (years) in the same amount of Earth time.' },
+  { question: 'Which planet would make me youngest?', answer: 'On Mercury, a year is only 88 Earth days, so you would be much "younger" in Mercury years. On Neptune, a year is 165 Earth years, so you would barely have aged at all.' },
+];
+---
+
+<PageLayout
+  title="Age on Other Planets Calculator"
+  description="Calculate your age on Mercury, Venus, Mars, Jupiter, and every planet in the solar system based on orbital periods."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Age on Other Planets' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>🎂 Age on Other Planets</h1>
+      <p class="tool-intro">Enter your Earth age to find out how old you would be on other planets.</p>
+
+      <div class="calculator glass-card">
+        <div class="input-group">
+          <label for="earth-age">Your Age on Earth (years)</label>
+          <input type="number" id="earth-age" value="25" min="0" max="150" />
+        </div>
+        <div class="input-group">
+          <label for="planet-select">Select Planet</label>
+          <select id="planet-select">
+            {Object.keys(ORBITAL_PERIODS).map((name) => (
+              <option value={ORBITAL_PERIODS[name as keyof typeof ORBITAL_PERIODS]}>{name}</option>
+            ))}
+          </select>
+        </div>
+        <div class="result" id="result" aria-live="polite">
+          <span class="result-label">Your age on <span id="planet-name">Mercury</span>:</span>
+          <span class="result-value" id="result-value">—</span>
+        </div>
+      </div>
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script define:vars={{ periods: ORBITAL_PERIODS }}>
+  const ageInput = document.getElementById('earth-age');
+  const planetSelect = document.getElementById('planet-select');
+  const resultValue = document.getElementById('result-value');
+  const planetName = document.getElementById('planet-name');
+  const names = Object.keys(periods);
+
+  function calculate() {
+    const earthAge = parseFloat(ageInput.value) || 0;
+    const period = parseFloat(planetSelect.value);
+    const earthDays = earthAge * 365.25;
+    const planetAge = earthDays / period;
+    resultValue.textContent = planetAge.toFixed(2) + ' years';
+    planetName.textContent = names[planetSelect.selectedIndex];
+  }
+
+  ageInput?.addEventListener('input', calculate);
+  planetSelect?.addEventListener('change', calculate);
+  calculate();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 500px; margin-bottom: var(--space-3xl); }
+  .input-group { margin-bottom: var(--space-lg); }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input, .input-group select {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--starlight);
+  }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(6,182,212,0.1); border-radius: var(--radius-md); }
+  .result-label { display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--space-sm); }
+  .result-value { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--aurora-light); }
+</style>

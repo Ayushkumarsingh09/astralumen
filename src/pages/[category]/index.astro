@@ -1,0 +1,129 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { getCollection } from 'astro:content';
+import { CATEGORY_META, type Category } from '@/config/site';
+
+export function getStaticPaths() {
+  const categories = Object.keys(CATEGORY_META) as Category[];
+  return categories.map((category) => ({ params: { category } }));
+}
+
+const { category } = Astro.params;
+const meta = CATEGORY_META[category as Category];
+
+const articles = await getCollection('articles', ({ data }) =>
+  !data.draft && data.category === category
+);
+const sorted = articles.sort(
+  (a, b) => new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime()
+);
+---
+
+<PageLayout
+  title={`${meta.title} — Science Articles & Guides`}
+  description={meta.description}
+  breadcrumbs={[{ label: meta.title }]}
+>
+  <section class="category-hero">
+    <div class="container">
+      <span class="category-icon" aria-hidden="true">{meta.icon}</span>
+      <h1>{meta.title}</h1>
+      <p class="category-desc">{meta.description}</p>
+      <p class="article-count">{sorted.length} articles</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="articles-grid">
+        {sorted.map((article) => (
+          <a href={`/articles/${article.slug}`} class="article-card glass-card">
+            <img
+              src={article.data.featuredImage}
+              alt={article.data.title}
+              width="400"
+              height="225"
+              loading="lazy"
+              onerror="this.onerror=null;this.src='/images/og-default.svg'"
+            />
+            <div class="card-body">
+              <h2>{article.data.title}</h2>
+              <p>{article.data.description}</p>
+              <span class="meta">{article.data.readingTime} min read</span>
+            </div>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .category-hero {
+    padding: var(--space-3xl) 0;
+    text-align: center;
+  }
+
+  .category-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .category-desc {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: var(--space-md) auto;
+  }
+
+  .article-count {
+    font-size: 0.875rem;
+    color: var(--aurora);
+    font-family: var(--font-display);
+  }
+
+  .articles-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .article-card {
+    padding: 0;
+    overflow: hidden;
+    text-decoration: none;
+    color: inherit;
+  }
+
+  .article-card img {
+    width: 100%;
+    height: 200px;
+    object-fit: cover;
+  }
+
+  .card-body {
+    padding: var(--space-lg);
+  }
+
+  .card-body h2 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-sm);
+    color: var(--starlight);
+  }
+
+  .card-body p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+</style>

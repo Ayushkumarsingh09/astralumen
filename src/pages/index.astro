@@ -1,0 +1,36 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import CosmicHero from '@components/home/CosmicHero.astro';
+import SolarSystemExplorer from '@components/home/SolarSystemExplorer.astro';
+import FeaturedDiscoveries from '@components/home/FeaturedDiscoveries.astro';
+import ScienceHubs from '@components/home/ScienceHubs.astro';
+import ScienceToolsPreview from '@components/home/ScienceToolsPreview.astro';
+import DidYouKnow from '@components/home/DidYouKnow.astro';
+import UniverseTimeline from '@components/home/UniverseTimeline.astro';
+import Newsletter from '@components/Newsletter.astro';
+import { SITE } from '@/config/site';
+---
+
+<PageLayout
+  title="AstraLumen — Illuminate the Universe of Science"
+  description={SITE.description}
+>
+  <CosmicHero />
+  <SolarSystemExplorer />
+  <FeaturedDiscoveries />
+  <ScienceHubs />
+  <ScienceToolsPreview />
+  <DidYouKnow />
+  <UniverseTimeline />
+  <section class="section newsletter-section">
+    <div class="container">
+      <Newsletter variant="inline" />
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .newsletter-section {
+    padding-bottom: var(--space-4xl);
+  }
+</style>

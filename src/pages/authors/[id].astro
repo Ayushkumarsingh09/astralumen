@@ -1,0 +1,272 @@
+---
+import { getCollection } from 'astro:content';
+import PageLayout from '@layouts/PageLayout.astro';
+import { AUTHORS, getAuthor } from '@/data/authors';
+import { CATEGORY_META, type Category } from '@/config/site';
+import { formatDate } from '@/utils/helpers';
+
+export function getStaticPaths() {
+  return AUTHORS.map((author) => ({
+    params: { id: author.id },
+  }));
+}
+
+const { id } = Astro.params;
+const author = getAuthor(id!);
+
+if (!author) {
+  return Astro.redirect('/authors');
+}
+
+const allArticles = await getCollection('articles', ({ data }) => !data.draft);
+
+const authorArticles = allArticles
+  .filter(
+    (article) =>
+      article.data.author === author.id ||
+      article.data.reviewer === author.id
+  )
+  .sort(
+    (a, b) =>
+      new Date(b.data.publishedDate).getTime() - new Date(a.data.publishedDate).getTime()
+  );
+
+const reviewedCategories = author.reviewedTopics.map(
+  (cat) => CATEGORY_META[cat as Category]?.title ?? cat
+);
+---
+
+<PageLayout
+  title={`${author.name} — ${author.title}`}
+  description={author.bio}
+  breadcrumbs={[
+    { label: 'Authors', href: '/authors' },
+    { label: author.name },
+  ]}
+  image={author.avatar}
+>
+  <section class="profile-hero">
+    <div class="container profile-header">
+      <img
+        src={author.avatar}
+        alt={author.name}
+        width="160"
+        height="160"
+        class="profile-avatar"
+      />
+      <div class="profile-info">
+        <h1>{author.name}</h1>
+        <p class="profile-title">{author.title}</p>
+        <p class="profile-credentials">{author.credentials}</p>
+        <div class="expertise-tags">
+          {author.expertise.map((e) => (
+            <span class="tag">{e}</span>
+          ))}
+        </div>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container profile-grid">
+      <div class="profile-bio glass-card">
+        <h2>About</h2>
+        <p>{author.bio}</p>
+
+        <h3>Review Areas</h3>
+        <p class="review-areas">
+          {reviewedCategories.join(' · ')}
+        </p>
+      </div>
+
+      <div class="profile-articles">
+        <h2>Articles</h2>
+        {authorArticles.length > 0 ? (
+          <div class="articles-list">
+            {authorArticles.map((article) => (
+              <a href={`/articles/${article.slug}`} class="article-item glass-card">
+                <span class="article-category">
+                  {CATEGORY_META[article.data.category as Category]?.title ?? article.data.category}
+                </span>
+                <h3>{article.data.title}</h3>
+                <p>{article.data.description}</p>
+                <span class="article-meta">
+                  {formatDate(article.data.publishedDate)} · {article.data.readingTime} min read
+                  {article.data.reviewer === author.id && article.data.author !== author.id && (
+                    <span class="role-badge">Reviewer</span>
+                  )}
+                </span>
+              </a>
+            ))}
+          </div>
+        ) : (
+          <p class="no-articles">
+            Articles reviewed by {author.name.split(' ').pop()} are coming soon.
+            Browse our <a href={`/${author.reviewedTopics[0]}`}>latest {reviewedCategories[0]} articles</a>.
+          </p>
+        )}
+      </div>
+    </div>
+  </section>
+
+  <section class="section back-section">
+    <div class="container">
+      <a href="/authors" class="btn btn-ghost">← All Authors</a>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .profile-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+  }
+
+  .profile-header {
+    display: flex;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (max-width: 600px) {
+    .profile-header {
+      flex-direction: column;
+      text-align: center;
+    }
+  }
+
+  .profile-avatar {
+    border-radius: var(--radius-full);
+    border: 3px solid var(--border);
+    flex-shrink: 0;
+    box-shadow: var(--glow-stellar);
+  }
+
+  .profile-title {
+    font-size: 1.125rem;
+    color: var(--aurora);
+    margin-bottom: var(--space-xs);
+  }
+
+  .profile-credentials {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .expertise-tags {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+  }
+
+  @media (max-width: 600px) {
+    .expertise-tags { justify-content: center; }
+  }
+
+  .tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: var(--radius-full);
+    color: var(--aurora-light);
+  }
+
+  .profile-grid {
+    display: grid;
+    grid-template-columns: 1fr 1.5fr;
+    gap: var(--space-2xl);
+    align-items: start;
+  }
+
+  @media (max-width: 900px) {
+    .profile-grid { grid-template-columns: 1fr; }
+  }
+
+  .profile-bio h2,
+  .profile-articles h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-lg);
+    color: var(--stellar-light);
+  }
+
+  .profile-bio p {
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin-bottom: var(--space-xl);
+  }
+
+  .profile-bio h3 {
+    font-size: 1rem;
+    margin-bottom: var(--space-sm);
+    color: var(--starlight);
+  }
+
+  .review-areas {
+    font-size: 0.9375rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .articles-list {
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-lg);
+  }
+
+  .article-item {
+    text-decoration: none;
+    color: inherit;
+    padding: var(--space-lg);
+  }
+
+  .article-category {
+    font-size: 0.75rem;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--aurora);
+  }
+
+  .article-item h3 {
+    font-size: 1.0625rem;
+    margin: var(--space-sm) 0;
+    color: var(--starlight);
+  }
+
+  .article-item p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-sm);
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .article-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  .role-badge {
+    margin-left: var(--space-sm);
+    padding: 0.125rem 0.5rem;
+    background: rgba(124, 58, 237, 0.2);
+    border-radius: var(--radius-full);
+    color: var(--stellar-light);
+    font-size: 0.6875rem;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+
+  .no-articles {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+  }
+
+  .back-section {
+    padding-top: 0;
+    padding-bottom: var(--space-4xl);
+  }
+</style>

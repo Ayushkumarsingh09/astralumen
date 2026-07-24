@@ -1,0 +1,132 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+import { SITE } from '@/config/site';
+
+const faqs = [
+  {
+    question: 'What is AstraLumen?',
+    answer: `${SITE.name} is an educational science platform that covers space, astronomy, Earth science, biology, physics, chemistry, and technology. We publish expert-reviewed articles, interactive science tools, experiments, and evergreen educational resources designed for students, educators, and curious learners of all ages.`,
+  },
+  {
+    question: 'Is AstraLumen content free to use?',
+    answer: 'Yes. All articles, science tools, and educational resources on AstraLumen are free to access. You may read, share links, and use our interactive tools for personal and classroom educational purposes. For republication or commercial use, please contact us for permission.',
+  },
+  {
+    question: 'Who writes and reviews the articles?',
+    answer: 'Our content is created by writers with science backgrounds and reviewed by credentialed experts including astrophysicists, geologists, biologists, and physicists. Each author\'s credentials and areas of expertise are listed on our Authors page. See our Editorial Policy for our full review process.',
+  },
+  {
+    question: 'How do I know the information is accurate?',
+    answer: 'Every article goes through a multi-step editorial process including expert scientific review and fact-checking against peer-reviewed sources and official agency data. We cite references at the end of each article and update content when science evolves. If you spot an error, please use our Corrections Policy to report it.',
+  },
+  {
+    question: 'Can I use AstraLumen in my classroom?',
+    answer: 'Absolutely! AstraLumen is designed with educators in mind. You are welcome to share article links, use our science tools in lessons, and reference our content in teaching materials. We ask that you provide attribution and link back to the original article.',
+  },
+  {
+    question: 'What science tools are available?',
+    answer: 'We offer interactive calculators and explorers including a Planet Weight Calculator, Age on Other Planets tool, Light Year Converter, Distance Converter, Gravity Calculator, Scientific Notation Calculator, Unit Converter, Periodic Table Explorer, Solar System Explorer, and Space Timeline Viewer. Visit our Science Tools page to explore them all.',
+  },
+  {
+    question: 'How often is content updated?',
+    answer: 'We review and update articles regularly, especially when significant new research or mission results are published. Each article displays its publication date and last updated date. Major corrections are noted transparently per our Corrections Policy.',
+  },
+  {
+    question: 'How do I subscribe to the newsletter?',
+    answer: 'You can subscribe to the Cosmic Discovery Newsletter from our homepage or footer. Enter your email address and confirm your subscription. We send weekly science discoveries, space mission updates, and educational insights. You can unsubscribe at any time.',
+  },
+  {
+    question: 'Does AstraLumen show advertisements?',
+    answer: 'Yes. To keep our content free, we may display advertisements through services like Google AdSense. Ads are clearly distinguishable from editorial content. We do not allow advertisers to influence our editorial decisions. See our Privacy Policy and Cookie Policy for details on ad-related data collection.',
+  },
+  {
+    question: 'How do I report an error or request a correction?',
+    answer: 'We welcome correction reports from readers. Visit our Corrections Policy page for guidelines, then submit a report via our contact form (select "Report a Correction") or email us at contact@astralumen.science with the article URL, description of the error, and a supporting source.',
+  },
+  {
+    question: 'Is AstraLumen suitable for children?',
+    answer: 'AstraLumen is an educational resource suitable for learners of all ages, including students. We do not knowingly collect personal information from children under 13 without parental consent. Parents and educators are encouraged to guide younger learners and supervise any hands-on experiments.',
+  },
+  {
+    question: 'How can I contact the AstraLumen team?',
+    answer: 'Visit our Contact page to send us a message, or email us at contact@astralumen.science. We respond to general inquiries, editorial feedback, partnership proposals, and correction requests within 2–3 business days.',
+  },
+];
+---
+
+<PageLayout
+  title="Frequently Asked Questions"
+  description="Find answers to common questions about AstraLumen, our science content, editorial standards, tools, and how to get in touch."
+  breadcrumbs={[{ label: 'FAQ' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="hero-icon" aria-hidden="true">❓</span>
+      <h1>Frequently Asked Questions</h1>
+      <p class="hero-lead">Everything you need to know about {SITE.name}.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container faq-wrap">
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+
+  <section class="section cta-section">
+    <div class="container">
+      <div class="cta-card glass-card">
+        <h2>Still have questions?</h2>
+        <p>Our team is happy to help. Reach out and we'll get back to you within a few business days.</p>
+        <a href="/contact" class="btn btn-primary">Contact Us</a>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-lead {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-top: var(--space-md);
+  }
+
+  .faq-wrap {
+    max-width: 800px;
+    padding-bottom: var(--space-xl);
+  }
+
+  .cta-section {
+    padding-top: 0;
+    padding-bottom: var(--space-4xl);
+  }
+
+  .cta-card {
+    text-align: center;
+    max-width: 600px;
+    margin: 0 auto;
+  }
+
+  .cta-card h2 {
+    font-size: 1.5rem;
+    margin-bottom: var(--space-md);
+    color: var(--stellar-light);
+  }
+
+  .cta-card p {
+    color: var(--text-secondary);
+    margin-bottom: var(--space-xl);
+  }
+</style>
