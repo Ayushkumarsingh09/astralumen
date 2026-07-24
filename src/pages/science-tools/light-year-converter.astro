@@ -1,0 +1,95 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const faqs = [
+  { question: 'What is a light year?', answer: 'A light year is the distance light travels in one year — approximately 9.461 trillion kilometers or 5.879 trillion miles. It is a unit of distance, not time.' },
+  { question: 'How far is the nearest star?', answer: 'Proxima Centauri is about 4.24 light years away. Light from this star takes over 4 years to reach Earth.' },
+];
+---
+
+<PageLayout
+  title="Light Year Converter"
+  description="Convert light years to kilometers, miles, astronomical units, and parsecs with this free scientific distance converter."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Light Year Converter' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>💫 Light Year Converter</h1>
+      <p class="tool-intro">Convert between cosmic distance units used in astronomy.</p>
+
+      <div class="calculator glass-card">
+        <div class="input-group">
+          <label for="value">Value</label>
+          <input type="number" id="value" value="1" step="any" />
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="from-unit">From</label>
+            <select id="from-unit">
+              <option value="ly">Light Years</option>
+              <option value="km">Kilometers</option>
+              <option value="mi">Miles</option>
+              <option value="au">Astronomical Units</option>
+              <option value="pc">Parsecs</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="to-unit">To</label>
+            <select id="to-unit">
+              <option value="km">Kilometers</option>
+              <option value="ly">Light Years</option>
+              <option value="mi">Miles</option>
+              <option value="au">Astronomical Units</option>
+              <option value="pc">Parsecs</option>
+            </select>
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <span class="result-value" id="result-value">—</span>
+        </div>
+      </div>
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  const LY_KM = 9.461e12;
+  const toKm: Record<string, number> = {
+    ly: LY_KM, km: 1, mi: 1.60934, au: 1.496e8, pc: 3.086e13,
+  };
+  const fromKm = (km: number, unit: string) => km / toKm[unit];
+
+  const valueEl = document.getElementById('value') as HTMLInputElement;
+  const fromEl = document.getElementById('from-unit') as HTMLSelectElement;
+  const toEl = document.getElementById('to-unit') as HTMLSelectElement;
+  const resultEl = document.getElementById('result-value');
+
+  function convert() {
+    const val = parseFloat(valueEl.value) || 0;
+    const km = val * toKm[fromEl.value];
+    const result = fromKm(km, toEl.value);
+    const labels: Record<string, string> = { ly: 'light years', km: 'km', mi: 'miles', au: 'AU', pc: 'parsecs' };
+    if (resultEl) resultEl.textContent = result.toExponential(4) + ' ' + labels[toEl.value];
+  }
+
+  [valueEl, fromEl, toEl].forEach((el) => el?.addEventListener('input', convert));
+  [fromEl, toEl].forEach((el) => el?.addEventListener('change', convert));
+  convert();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 500px; margin-bottom: var(--space-3xl); }
+  .input-group { margin-bottom: var(--space-lg); flex: 1; }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input, .input-group select {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--starlight);
+  }
+  .input-row { display: flex; gap: var(--space-md); }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.1); border-radius: var(--radius-md); }
+  .result-value { font-family: var(--font-mono); font-size: 1.5rem; color: var(--gold); }
+</style>

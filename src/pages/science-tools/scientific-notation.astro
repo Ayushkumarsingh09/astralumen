@@ -1,0 +1,172 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const faqs = [
+  { question: 'What is scientific notation?', answer: 'Scientific notation expresses numbers as a coefficient between 1 and 10 multiplied by a power of 10. For example, 300,000,000 m/s is written as 3 × 10⁸ m/s — the speed of light.' },
+  { question: 'When is scientific notation used in astronomy?', answer: 'Astronomical distances and masses span enormous ranges. The Sun\'s mass is about 1.989 × 10³⁰ kg, and the observable universe is roughly 8.8 × 10²⁶ meters across — values impractical to write in standard form.' },
+  { question: 'What does the "e" format mean?', answer: 'Computers often display scientific notation with "e", where 1.5e11 means 1.5 × 10¹¹. This calculator accepts both standard decimal input and e-notation.' },
+];
+---
+
+<PageLayout
+  title="Scientific Notation Calculator"
+  description="Convert numbers to and from scientific notation for astronomy, physics, and chemistry calculations."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Scientific Notation' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>🔢 Scientific Notation Calculator</h1>
+      <p class="tool-intro">Convert between standard decimal form and scientific notation — essential for working with cosmic scales.</p>
+
+      <div class="calculator glass-card">
+        <div class="mode-toggle" role="tablist">
+          <button type="button" class="mode-btn active" data-mode="to-sci" role="tab" aria-selected="true">To Scientific</button>
+          <button type="button" class="mode-btn" data-mode="from-sci" role="tab" aria-selected="false">From Scientific</button>
+        </div>
+
+        <div id="panel-to-sci" class="panel">
+          <div class="input-group">
+            <label for="decimal-input">Decimal number</label>
+            <input type="text" id="decimal-input" value="149600000000" placeholder="e.g. 149600000000 or 1.496e11" />
+          </div>
+          <div class="result" aria-live="polite">
+            <span class="result-label">Scientific notation</span>
+            <span class="result-value" id="to-sci-result">—</span>
+          </div>
+        </div>
+
+        <div id="panel-from-sci" class="panel hidden">
+          <div class="input-row">
+            <div class="input-group">
+              <label for="coefficient">Coefficient</label>
+              <input type="number" id="coefficient" value="1.496" step="any" />
+            </div>
+            <div class="input-group exponent-group">
+              <label for="exponent">× 10</label>
+              <input type="number" id="exponent" value="11" step="1" />
+            </div>
+          </div>
+          <div class="result" aria-live="polite">
+            <span class="result-label">Decimal form</span>
+            <span class="result-value" id="from-sci-result">—</span>
+          </div>
+        </div>
+      </div>
+
+      <div class="education">
+        <h2>Why Scientific Notation Matters</h2>
+        <p>From subatomic particles to galactic clusters, science deals with numbers spanning dozens of orders of magnitude. Scientific notation keeps calculations manageable and reduces errors when counting zeros.</p>
+        <table>
+          <thead><tr><th>Object / Quantity</th><th>Scientific Notation</th></tr></thead>
+          <tbody>
+            <tr><td>Speed of light</td><td>2.998 × 10⁸ m/s</td></tr>
+            <tr><td>Earth–Sun distance</td><td>1.496 × 10¹¹ m</td></tr>
+            <tr><td>Sun's mass</td><td>1.989 × 10³⁰ kg</td></tr>
+            <tr><td>Planck length</td><td>1.616 × 10⁻³⁵ m</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  const modeBtns = document.querySelectorAll('.mode-btn');
+  const panelToSci = document.getElementById('panel-to-sci');
+  const panelFromSci = document.getElementById('panel-from-sci');
+  const decimalInput = document.getElementById('decimal-input');
+  const toSciResult = document.getElementById('to-sci-result');
+  const coefficientEl = document.getElementById('coefficient');
+  const exponentEl = document.getElementById('exponent');
+  const fromSciResult = document.getElementById('from-sci-result');
+
+  function toSciNotation(n) {
+    if (!isFinite(n) || n === 0) return '0';
+    const exp = Math.floor(Math.log10(Math.abs(n)));
+    const coeff = n / Math.pow(10, exp);
+    const expStr = exp >= 0 ? `× 10^${exp}` : `× 10^${exp}`;
+    return `${coeff.toPrecision(6)} ${expStr}`;
+  }
+
+  function convertToSci() {
+    const raw = decimalInput.value.trim().replace(/,/g, '');
+    const n = parseFloat(raw);
+    if (raw === '' || isNaN(n)) {
+      toSciResult.textContent = '—';
+      return;
+    }
+    toSciResult.textContent = toSciNotation(n);
+  }
+
+  function convertFromSci() {
+    const coeff = parseFloat(coefficientEl.value) || 0;
+    const exp = parseInt(exponentEl.value, 10) || 0;
+    const result = coeff * Math.pow(10, exp);
+    if (!isFinite(result)) {
+      fromSciResult.textContent = 'Overflow';
+      return;
+    }
+    const abs = Math.abs(result);
+    if (abs >= 1e15 || (abs < 0.0001 && abs > 0)) {
+      fromSciResult.textContent = result.toExponential(6);
+    } else {
+      fromSciResult.textContent = result.toLocaleString('en-US', { maximumFractionDigits: 10 });
+    }
+  }
+
+  modeBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      modeBtns.forEach((b) => {
+        b.classList.remove('active');
+        b.setAttribute('aria-selected', 'false');
+      });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      const mode = btn.dataset.mode;
+      panelToSci.classList.toggle('hidden', mode !== 'to-sci');
+      panelFromSci.classList.toggle('hidden', mode !== 'from-sci');
+    });
+  });
+
+  decimalInput?.addEventListener('input', convertToSci);
+  coefficientEl?.addEventListener('input', convertFromSci);
+  exponentEl?.addEventListener('input', convertFromSci);
+  convertToSci();
+  convertFromSci();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 520px; margin-bottom: var(--space-3xl); }
+  .mode-toggle { display: flex; gap: var(--space-sm); margin-bottom: var(--space-xl); }
+  .mode-btn {
+    flex: 1; padding: 0.6rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    color: var(--text-secondary); cursor: pointer; font-size: 0.875rem;
+    transition: all var(--transition-fast);
+  }
+  .mode-btn.active { background: rgba(124,58,237,0.25); border-color: var(--aurora); color: var(--starlight); }
+  .panel.hidden { display: none; }
+  .input-group { margin-bottom: var(--space-lg); flex: 1; }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--starlight);
+    font-family: var(--font-mono);
+  }
+  .input-row { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+  .exponent-group input { text-align: center; }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.1); border-radius: var(--radius-md); }
+  .result-label { display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--space-sm); }
+  .result-value { font-family: var(--font-mono); font-size: 1.25rem; color: var(--gold); word-break: break-word; }
+  .education { margin-bottom: var(--space-3xl); }
+  .education p { color: var(--text-secondary); line-height: 1.7; }
+  .education table { width: 100%; border-collapse: collapse; margin-top: var(--space-lg); }
+  .education th, .education td { padding: var(--space-md); border: 1px solid var(--border); text-align: left; }
+  .education th { background: rgba(124,58,237,0.15); font-family: var(--font-display); font-size: 0.8125rem; }
+  @media (max-width: 480px) { .input-row { flex-direction: column; } }
+</style>

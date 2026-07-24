@@ -1,0 +1,154 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const faqs = [
+  { question: 'What is absolute zero?', answer: 'Absolute zero is 0 K (−273.15 °C or −459.67 °F) — the theoretical temperature at which particles have minimum kinetic energy. It cannot be reached in practice, but scientists approach within billionths of a degree.' },
+  { question: 'How does atmospheric pressure relate to space?', answer: 'Sea-level pressure is about 101,325 Pa (1 atm). In the vacuum of space, pressure approaches zero. Spacecraft and spacesuits must maintain Earth-like pressure for human survival.' },
+  { question: 'What is an electron volt (eV)?', answer: 'An electron volt is the energy gained by an electron accelerated through 1 volt. It is convenient for atomic and particle physics: visible light photons are about 2–3 eV, while cosmic rays can exceed 10²⁰ eV.' },
+];
+---
+
+<PageLayout
+  title="Scientific Unit Converter"
+  description="Convert temperature, pressure, and energy units for physics, chemistry, and space science calculations."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Unit Converter' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>🔄 Scientific Unit Converter</h1>
+      <p class="tool-intro">Convert between temperature, pressure, and energy units used in science and engineering.</p>
+
+      <div class="calculator glass-card">
+        <div class="category-tabs" role="tablist">
+          <button type="button" class="cat-btn active" data-cat="temperature" role="tab" aria-selected="true">Temperature</button>
+          <button type="button" class="cat-btn" data-cat="pressure" role="tab" aria-selected="false">Pressure</button>
+          <button type="button" class="cat-btn" data-cat="energy" role="tab" aria-selected="false">Energy</button>
+        </div>
+
+        <div class="input-group">
+          <label for="value">Value</label>
+          <input type="number" id="value" value="0" step="any" />
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="from-unit">From</label>
+            <select id="from-unit"></select>
+          </div>
+          <div class="input-group">
+            <label for="to-unit">To</label>
+            <select id="to-unit"></select>
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <span class="result-value" id="result-value">—</span>
+        </div>
+      </div>
+
+      <div class="education">
+        <h2>Units in Space Science</h2>
+        <p>Temperature on Venus reaches 465 °C (738 K) — hot enough to melt lead. Mars averages −63 °C (210 K). Pressure on Mars is about 600 Pa, less than 1% of Earth's sea-level pressure. The Sun's core temperature is roughly 15 million K, while the cosmic microwave background is 2.7 K.</p>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  const UNITS = {
+    temperature: {
+      C: { label: 'Celsius (°C)', toBase: (v) => v, fromBase: (v) => v },
+      F: { label: 'Fahrenheit (°F)', toBase: (v) => (v - 32) * 5 / 9, fromBase: (v) => v * 9 / 5 + 32 },
+      K: { label: 'Kelvin (K)', toBase: (v) => v - 273.15, fromBase: (v) => v + 273.15 },
+    },
+    pressure: {
+      Pa: { label: 'Pascals (Pa)', toBase: (v) => v, fromBase: (v) => v },
+      atm: { label: 'Atmospheres (atm)', toBase: (v) => v * 101325, fromBase: (v) => v / 101325 },
+      bar: { label: 'Bar', toBase: (v) => v * 100000, fromBase: (v) => v / 100000 },
+      psi: { label: 'PSI', toBase: (v) => v * 6894.76, fromBase: (v) => v / 6894.76 },
+    },
+    energy: {
+      J: { label: 'Joules (J)', toBase: (v) => v, fromBase: (v) => v },
+      kJ: { label: 'Kilojoules (kJ)', toBase: (v) => v * 1000, fromBase: (v) => v / 1000 },
+      cal: { label: 'Calories (cal)', toBase: (v) => v * 4.184, fromBase: (v) => v / 4.184 },
+      kcal: { label: 'Kilocalories (kcal)', toBase: (v) => v * 4184, fromBase: (v) => v / 4184 },
+      eV: { label: 'Electron volts (eV)', toBase: (v) => v * 1.60218e-19, fromBase: (v) => v / 1.60218e-19 },
+    },
+  };
+
+  let category = 'temperature';
+  const valueEl = document.getElementById('value');
+  const fromEl = document.getElementById('from-unit');
+  const toEl = document.getElementById('to-unit');
+  const resultEl = document.getElementById('result-value');
+  const catBtns = document.querySelectorAll('.cat-btn');
+
+  function populateSelects() {
+    const units = UNITS[category];
+    const keys = Object.keys(units);
+    fromEl.innerHTML = keys.map((k) => `<option value="${k}">${units[k].label}</option>`).join('');
+    toEl.innerHTML = keys.map((k) => `<option value="${k}">${units[k].label}</option>`).join('');
+    if (keys.length > 1) toEl.selectedIndex = 1;
+  }
+
+  function format(n) {
+    if (!isFinite(n)) return '—';
+    const abs = Math.abs(n);
+    if (abs >= 1e9 || (abs < 0.0001 && abs > 0)) return n.toExponential(4);
+    return n.toLocaleString('en-US', { maximumFractionDigits: 6 });
+  }
+
+  function convert() {
+    const val = parseFloat(valueEl.value) || 0;
+    const units = UNITS[category];
+    const base = units[fromEl.value].toBase(val);
+    const result = units[toEl.value].fromBase(base);
+    resultEl.textContent = format(result) + ' ' + units[toEl.value].label;
+  }
+
+  catBtns.forEach((btn) => {
+    btn.addEventListener('click', () => {
+      catBtns.forEach((b) => { b.classList.remove('active'); b.setAttribute('aria-selected', 'false'); });
+      btn.classList.add('active');
+      btn.setAttribute('aria-selected', 'true');
+      category = btn.dataset.cat;
+      populateSelects();
+      convert();
+    });
+  });
+
+  [valueEl, fromEl, toEl].forEach((el) => {
+    el?.addEventListener('input', convert);
+    el?.addEventListener('change', convert);
+  });
+
+  populateSelects();
+  convert();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 520px; margin-bottom: var(--space-3xl); }
+  .category-tabs { display: flex; gap: var(--space-sm); margin-bottom: var(--space-xl); flex-wrap: wrap; }
+  .cat-btn {
+    flex: 1; min-width: 90px; padding: 0.6rem 0.75rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    color: var(--text-secondary); cursor: pointer; font-size: 0.8125rem;
+    transition: all var(--transition-fast);
+  }
+  .cat-btn.active { background: rgba(124,58,237,0.25); border-color: var(--aurora); color: var(--starlight); }
+  .input-group { margin-bottom: var(--space-lg); flex: 1; }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input, .input-group select {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--starlight);
+  }
+  .input-row { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.1); border-radius: var(--radius-md); }
+  .result-value { font-family: var(--font-mono); font-size: 1.25rem; color: var(--gold); word-break: break-word; }
+  .education { margin-bottom: var(--space-3xl); }
+  .education p { color: var(--text-secondary); line-height: 1.7; }
+  @media (max-width: 480px) { .input-row { flex-direction: column; } }
+</style>

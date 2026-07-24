@@ -1,0 +1,114 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const PLANETS = [
+  { name: 'Mercury', gravity: 3.7 },
+  { name: 'Venus', gravity: 8.87 },
+  { name: 'Earth', gravity: 9.81 },
+  { name: 'Mars', gravity: 3.71 },
+  { name: 'Jupiter', gravity: 24.79 },
+  { name: 'Saturn', gravity: 10.44 },
+  { name: 'Uranus', gravity: 8.87 },
+  { name: 'Neptune', gravity: 11.15 },
+  { name: 'Moon', gravity: 1.62 },
+  { name: 'Pluto', gravity: 0.62 },
+];
+
+const faqs = [
+  { question: 'Why does weight change on different planets?', answer: 'Weight depends on gravitational force, which varies with a planet\'s mass and radius. More massive planets exert stronger gravitational pull, making you weigh more.' },
+  { question: 'What is the difference between mass and weight?', answer: 'Mass is the amount of matter in an object (measured in kg) and stays constant everywhere. Weight is the gravitational force acting on that mass (measured in Newtons or pounds) and changes with gravity.' },
+  { question: 'Where would I weigh the most?', answer: 'Jupiter has the strongest surface gravity in our solar system at about 24.79 m/s² — you would weigh roughly 2.5 times your Earth weight there.' },
+];
+---
+
+<PageLayout
+  title="Planet Weight Calculator"
+  description="Calculate your weight on Mercury, Venus, Mars, Jupiter, and all planets in our solar system using real gravitational data."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Planet Weight Calculator' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>⚖️ Planet Weight Calculator</h1>
+      <p class="tool-intro">Enter your Earth weight to see how much you would weigh on other worlds.</p>
+
+      <div class="calculator glass-card">
+        <div class="input-group">
+          <label for="earth-weight">Your Weight on Earth (kg)</label>
+          <input type="number" id="earth-weight" value="70" min="1" max="500" step="0.1" />
+        </div>
+        <div class="input-group">
+          <label for="planet-select">Select Planet</label>
+          <select id="planet-select">
+            {PLANETS.map((p) => (
+              <option value={p.gravity}>{p.name}</option>
+            ))}
+          </select>
+        </div>
+        <div class="result" id="result" aria-live="polite">
+          <span class="result-label">Your weight on <span id="planet-name">Mercury</span>:</span>
+          <span class="result-value" id="result-value">26.4 kg</span>
+        </div>
+      </div>
+
+      <div class="education">
+        <h2>How It Works</h2>
+        <p>Weight is calculated using the formula: <strong>W = m × g</strong>, where m is your mass (kg) and g is the gravitational acceleration on the planet's surface (m/s²). Earth's gravity is 9.81 m/s².</p>
+        <table>
+          <thead><tr><th>Planet</th><th>Gravity (m/s²)</th><th>70 kg person weighs</th></tr></thead>
+          <tbody>
+            {PLANETS.map((p) => (
+              <tr>
+                <td>{p.name}</td>
+                <td>{p.gravity}</td>
+                <td>{((70 * p.gravity) / 9.81).toFixed(1)} kg</td>
+              </tr>
+            ))}
+          </tbody>
+        </table>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script define:vars={{ planets: PLANETS }}>
+  const weightInput = document.getElementById('earth-weight');
+  const planetSelect = document.getElementById('planet-select');
+  const resultValue = document.getElementById('result-value');
+  const planetName = document.getElementById('planet-name');
+
+  function calculate() {
+    const mass = parseFloat(weightInput.value) || 70;
+    const gravity = parseFloat(planetSelect.value);
+    const index = planetSelect.selectedIndex;
+    const weight = (mass * gravity) / 9.81;
+    resultValue.textContent = weight.toFixed(1) + ' kg';
+    planetName.textContent = planets[index].name;
+  }
+
+  weightInput?.addEventListener('input', calculate);
+  planetSelect?.addEventListener('change', calculate);
+  calculate();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 500px; margin-bottom: var(--space-3xl); }
+  .input-group { margin-bottom: var(--space-lg); }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input, .input-group select {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md);
+    color: var(--starlight); font-size: 1rem;
+  }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.1); border-radius: var(--radius-md); }
+  .result-label { display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--space-sm); }
+  .result-value { font-family: var(--font-display); font-size: 2.5rem; font-weight: 700; color: var(--gold); }
+  .education { margin-bottom: var(--space-3xl); }
+  .education table { width: 100%; border-collapse: collapse; margin-top: var(--space-lg); }
+  .education th, .education td { padding: var(--space-md); border: 1px solid var(--border); text-align: left; }
+  .education th { background: rgba(124,58,237,0.15); font-family: var(--font-display); font-size: 0.8125rem; }
+</style>

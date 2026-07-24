@@ -1,0 +1,153 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const PLANETS = [
+  { name: 'Mercury', color: '#9ca3af', emoji: '☿️', distance: 0.39, diameter: 4879, period: 88, moons: 0, gravity: 3.7, temp: '−173 to 427°C', fact: 'Smallest planet with the most extreme temperature swings.' },
+  { name: 'Venus', color: '#f59e0b', emoji: '♀️', distance: 0.72, diameter: 12104, period: 225, moons: 0, gravity: 8.87, temp: '462°C avg', fact: 'Hottest planet due to a runaway greenhouse effect.' },
+  { name: 'Earth', color: '#3b82f6', emoji: '🌍', distance: 1.0, diameter: 12742, period: 365, moons: 1, gravity: 9.81, temp: '15°C avg', fact: 'Only known world with liquid water oceans and life.' },
+  { name: 'Mars', color: '#ef4444', emoji: '♂️', distance: 1.52, diameter: 6779, period: 687, moons: 2, gravity: 3.71, temp: '−63°C avg', fact: 'Home to Olympus Mons, the largest volcano in the solar system.' },
+  { name: 'Jupiter', color: '#d97706', emoji: '♃', distance: 5.2, diameter: 139820, period: 4333, moons: 95, gravity: 24.79, temp: '−110°C', fact: 'Gas giant with a Great Red Spot storm larger than Earth.' },
+  { name: 'Saturn', color: '#fbbf24', emoji: '♄', distance: 9.58, diameter: 116460, period: 10759, moons: 146, gravity: 10.44, temp: '−140°C', fact: 'Famous for its spectacular ring system of ice and rock.' },
+  { name: 'Uranus', color: '#22d3ee', emoji: '♅', distance: 19.2, diameter: 50724, period: 30687, moons: 28, gravity: 8.87, temp: '−195°C', fact: 'Rotates on its side — likely from an ancient giant impact.' },
+  { name: 'Neptune', color: '#3b82f6', emoji: '♆', distance: 30.1, diameter: 49244, period: 60190, moons: 16, gravity: 11.15, temp: '−200°C', fact: 'Windiest planet with supersonic storms up to 2,100 km/h.' },
+];
+
+const faqs = [
+  { question: 'How far apart are the planets?', answer: 'Distances shown are average distances from the Sun in astronomical units (AU). One AU equals Earth\'s average distance from the Sun (~149.6 million km). Neptune orbits at about 30 AU — 30 times farther than Earth.' },
+  { question: 'Why aren\'t the planet sizes to scale in the visualization?', answer: 'If both size and distance were to scale, inner planets would be invisible dots and outer planets would be off-screen. This explorer uses scaled orbits for clarity while showing real comparative data in the info cards.' },
+  { question: 'Is Pluto still a planet?', answer: 'Pluto was reclassified as a dwarf planet in 2006. It orbits in the Kuiper Belt beyond Neptune. Dwarf planets are round and orbit the Sun but have not cleared their orbital neighborhood of other objects.' },
+];
+---
+
+<PageLayout
+  title="Solar System Explorer"
+  description="Interactive solar system visualization with planet data cards showing distance, size, moons, gravity, and fascinating facts."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Solar System Explorer' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>🪐 Solar System Explorer</h1>
+      <p class="tool-intro">Click a planet to explore its orbit and data. Distances are in AU; sizes are schematic.</p>
+
+      <div class="solar-viz glass-card">
+        <div class="orbit-view" id="orbit-view" aria-label="Solar system diagram">
+          <div class="sun" aria-hidden="true"></div>
+          {PLANETS.map((p, i) => (
+            <button
+              type="button"
+              class="planet-dot"
+              data-index={i}
+              style={`--orbit: ${p.distance}; --color: ${p.color}; --delay: ${i * 0.1}s`}
+              aria-label={p.name}
+            >
+              <span class="dot" style={`background: ${p.color}`}></span>
+              <span class="planet-label">{p.name}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="planet-cards">
+        {PLANETS.map((p, i) => (
+          <article class="planet-card glass-card" data-index={i} id={`card-${i}`}>
+            <header class="card-header">
+              <span class="card-emoji">{p.emoji}</span>
+              <h2 style={`color: ${p.color}`}>{p.name}</h2>
+            </header>
+            <dl class="card-stats">
+              <div><dt>Distance from Sun</dt><dd>{p.distance} AU</dd></div>
+              <div><dt>Diameter</dt><dd>{p.diameter.toLocaleString()} km</dd></div>
+              <div><dt>Orbital period</dt><dd>{p.period} Earth days</dd></div>
+              <div><dt>Moons</dt><dd>{p.moons}</dd></div>
+              <div><dt>Surface gravity</dt><dd>{p.gravity} m/s²</dd></div>
+              <div><dt>Temperature</dt><dd>{p.temp}</dd></div>
+            </dl>
+            <p class="card-fact">{p.fact}</p>
+          </article>
+        ))}
+      </div>
+
+      <div class="education">
+        <h2>Our Cosmic Neighborhood</h2>
+        <p>The solar system formed 4.6 billion years ago from a collapsing cloud of gas and dust. The Sun contains 99.86% of the system's mass. Rocky inner planets (Mercury through Mars) formed close to the Sun where it was too hot for light gases to condense. Gas and ice giants formed farther out where temperatures were low enough to capture hydrogen and helium.</p>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script define:vars={{ planets: PLANETS }}>
+  const dots = document.querySelectorAll('.planet-dot');
+  const cards = document.querySelectorAll('.planet-card');
+
+  function selectPlanet(index) {
+    dots.forEach((d, i) => d.classList.toggle('active', i === index));
+    cards.forEach((c, i) => c.classList.toggle('highlight', i === index));
+    document.getElementById(`card-${index}`)?.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  dots.forEach((dot) => {
+    dot.addEventListener('click', () => selectPlanet(parseInt(dot.dataset.index, 10)));
+  });
+
+  cards.forEach((card) => {
+    card.addEventListener('click', () => selectPlanet(parseInt(card.dataset.index, 10)));
+  });
+
+  selectPlanet(2);
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .solar-viz { padding: var(--space-2xl); margin-bottom: var(--space-3xl); overflow: hidden; }
+  .orbit-view {
+    position: relative; width: 100%; max-width: 700px; aspect-ratio: 1;
+    margin: 0 auto; display: flex; align-items: center; justify-content: center;
+  }
+  .sun {
+    position: absolute; width: 40px; height: 40px; border-radius: 50%;
+    background: radial-gradient(circle, #fbbf24, #f59e0b, #d97706);
+    box-shadow: 0 0 60px rgba(251, 191, 36, 0.6); z-index: 2;
+  }
+  .planet-dot {
+    position: absolute; background: none; border: none; cursor: pointer;
+    display: flex; flex-direction: column; align-items: center; gap: 4px;
+    transform: rotate(calc(var(--orbit) * 30deg)) translateX(calc(var(--orbit) * 28px + 30px)) rotate(calc(var(--orbit) * -30deg));
+    transition: transform var(--transition-fast);
+    animation: fadeIn 0.5s ease var(--delay) forwards; opacity: 0;
+  }
+  @keyframes fadeIn { to { opacity: 1; } }
+  .planet-dot .dot {
+    width: 12px; height: 12px; border-radius: 50%;
+    border: 2px solid rgba(255,255,255,0.3);
+    transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+  }
+  .planet-dot.active .dot, .planet-dot:hover .dot {
+    transform: scale(1.6); box-shadow: 0 0 16px var(--color);
+  }
+  .planet-label { font-size: 0.625rem; color: var(--text-muted); white-space: nowrap; }
+  .planet-dot.active .planet-label { color: var(--starlight); font-weight: 600; }
+  .planet-cards {
+    display: grid; grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-lg); margin-bottom: var(--space-3xl);
+  }
+  .planet-card { cursor: pointer; transition: border-color var(--transition-fast), box-shadow var(--transition-fast); }
+  .planet-card.highlight { border-color: var(--aurora); box-shadow: 0 0 24px rgba(124,58,237,0.25); }
+  .card-header { display: flex; align-items: center; gap: var(--space-md); margin-bottom: var(--space-md); }
+  .card-emoji { font-size: 2rem; }
+  .card-header h2 { font-size: 1.25rem; margin: 0; font-family: var(--font-display); }
+  .card-stats { display: grid; grid-template-columns: 1fr 1fr; gap: var(--space-sm); margin: 0 0 var(--space-md); }
+  .card-stats dt { font-size: 0.6875rem; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.04em; }
+  .card-stats dd { margin: 0 0 var(--space-sm); font-size: 0.875rem; color: var(--starlight); font-family: var(--font-mono); }
+  .card-fact { font-size: 0.875rem; color: var(--text-secondary); margin: 0; line-height: 1.6; font-style: italic; }
+  .education { margin-bottom: var(--space-3xl); }
+  .education p { color: var(--text-secondary); line-height: 1.7; }
+  @media (max-width: 480px) {
+    .orbit-view { max-width: 320px; }
+    .planet-dot { transform: rotate(calc(var(--orbit) * 30deg)) translateX(calc(var(--orbit) * 14px + 20px)) rotate(calc(var(--orbit) * -30deg)); }
+    .card-stats { grid-template-columns: 1fr; }
+  }
+</style>

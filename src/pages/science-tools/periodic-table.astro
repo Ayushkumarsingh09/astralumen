@@ -1,0 +1,166 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+import { ELEMENTS } from '@/data/elements';
+
+const faqs = [
+  { question: 'How is the periodic table organized?', answer: 'Elements are arranged by increasing atomic number in rows (periods) and columns (groups). Elements in the same column share similar chemical properties because they have the same number of valence electrons.' },
+  { question: 'What are the lanthanides and actinides?', answer: 'These are the two rows shown below the main table. Lanthanides (elements 57–71) are rare-earth metals used in magnets and electronics. Actinides (89–103) are mostly radioactive and include uranium and plutonium.' },
+  { question: 'Why do some elements have parentheses around their mass?', answer: 'For unstable, synthetic elements, the mass number of the most stable or best-studied isotope is shown. These values can change as new isotopes are discovered.' },
+];
+---
+
+<PageLayout
+  title="Periodic Table Explorer"
+  description="Interactive periodic table with all 118 elements. Click any element to view atomic mass, category, and key facts."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Periodic Table' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>🧪 Periodic Table Explorer</h1>
+      <p class="tool-intro">Explore all 118 elements — click any cell to view detailed properties.</p>
+
+      <div class="table-wrap glass-card">
+        <div class="periodic-grid" id="periodic-grid" role="grid" aria-label="Periodic table of elements">
+          {ELEMENTS.map((el) => (
+            <button
+              type="button"
+              class={`element-cell cat-${el.category}`}
+              style={`grid-row: ${el.row}; grid-column: ${el.col}`}
+              data-z={el.z}
+              role="gridcell"
+              aria-label={`${el.name}, atomic number ${el.z}`}
+            >
+              <span class="el-z">{el.z}</span>
+              <span class="el-symbol">{el.symbol}</span>
+              <span class="el-mass">{el.mass < 1000 ? el.mass.toFixed(el.mass < 10 ? 3 : 2) : Math.round(el.mass)}</span>
+            </button>
+          ))}
+        </div>
+        <div class="legend">
+          {['alkali', 'alkaline-earth', 'transition', 'post-transition', 'metalloid', 'nonmetal', 'halogen', 'noble', 'lanthanide', 'actinide', 'unknown'].map((cat) => (
+            <span class={`legend-item cat-${cat}`}>{cat.replace('-', ' ')}</span>
+          ))}
+        </div>
+      </div>
+
+      <div class="element-detail glass-card" id="element-detail" aria-live="polite">
+        <p class="detail-placeholder">Select an element above to view details</p>
+      </div>
+
+      <div class="education">
+        <h2>The Building Blocks of Matter</h2>
+        <p>The periodic table organizes every known element by atomic number — the number of protons in the nucleus. Dmitri Mendeleev first arranged elements by atomic mass in 1869, predicting undiscovered elements. Today the table includes synthetics created in particle accelerators, up to oganesson (element 118).</p>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script define:vars={{ elements: ELEMENTS }}>
+  const grid = document.getElementById('periodic-grid');
+  const detail = document.getElementById('element-detail');
+  const byZ = Object.fromEntries(elements.map((e) => [e.z, e]));
+
+  const categoryLabels = {
+    alkali: 'Alkali metal', 'alkaline-earth': 'Alkaline earth metal', transition: 'Transition metal',
+    'post-transition': 'Post-transition metal', metalloid: 'Metalloid', nonmetal: 'Nonmetal',
+    halogen: 'Halogen', noble: 'Noble gas', lanthanide: 'Lanthanide', actinide: 'Actinide', unknown: 'Unknown',
+  };
+
+  function showElement(z) {
+    const el = byZ[z];
+    if (!el || !detail) return;
+
+    document.querySelectorAll('.element-cell').forEach((c) => c.classList.remove('selected'));
+    document.querySelector(`[data-z="${z}"]`)?.classList.add('selected');
+
+    detail.innerHTML = `
+      <div class="detail-header">
+        <span class="detail-symbol cat-${el.category}">${el.symbol}</span>
+        <div>
+          <h2 class="detail-name">${el.name}</h2>
+          <p class="detail-meta">Atomic number ${el.z} · ${categoryLabels[el.category] || el.category}</p>
+        </div>
+      </div>
+      <dl class="detail-props">
+        <div><dt>Atomic mass</dt><dd>${el.mass} u</dd></div>
+        ${el.electronConfig ? `<div><dt>Electron config</dt><dd>${el.electronConfig}</dd></div>` : ''}
+        ${el.discovered ? `<div><dt>Discovered</dt><dd>${el.discovered}</dd></div>` : ''}
+        ${el.uses ? `<div><dt>Common uses</dt><dd>${el.uses}</dd></div>` : ''}
+      </dl>
+    `;
+    detail.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+  }
+
+  grid?.addEventListener('click', (e) => {
+    const cell = e.target.closest('.element-cell');
+    if (cell) showElement(parseInt(cell.dataset.z, 10));
+  });
+
+  showElement(6);
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .table-wrap { padding: var(--space-lg); margin-bottom: var(--space-xl); overflow-x: auto; }
+  .periodic-grid {
+    display: grid;
+    grid-template-columns: repeat(18, minmax(36px, 1fr));
+    grid-template-rows: repeat(9, minmax(44px, auto));
+    gap: 3px;
+    min-width: 320px;
+    max-width: 900px;
+    margin: 0 auto;
+  }
+  .element-cell {
+    display: flex; flex-direction: column; align-items: center; justify-content: center;
+    padding: 2px; border: 1px solid var(--border); border-radius: 4px;
+    background: rgba(0,0,0,0.4); cursor: pointer; color: var(--starlight);
+    font-family: var(--font-mono); transition: transform var(--transition-fast), box-shadow var(--transition-fast);
+    min-height: 44px;
+  }
+  .element-cell:hover, .element-cell.selected { transform: scale(1.08); z-index: 1; box-shadow: 0 0 12px rgba(124,58,237,0.4); }
+  .element-cell.selected { border-color: var(--gold); }
+  .el-z { font-size: 0.5rem; color: var(--text-muted); line-height: 1; }
+  .el-symbol { font-size: 0.75rem; font-weight: 700; line-height: 1.2; }
+  .el-mass { font-size: 0.45rem; color: var(--text-muted); line-height: 1; }
+  .cat-alkali { background: rgba(239,68,68,0.25); border-color: rgba(239,68,68,0.4); }
+  .cat-alkaline-earth { background: rgba(249,115,22,0.25); border-color: rgba(249,115,22,0.4); }
+  .cat-transition { background: rgba(234,179,8,0.2); border-color: rgba(234,179,8,0.4); }
+  .cat-post-transition { background: rgba(34,197,94,0.2); border-color: rgba(34,197,94,0.4); }
+  .cat-metalloid { background: rgba(20,184,166,0.2); border-color: rgba(20,184,166,0.4); }
+  .cat-nonmetal { background: rgba(6,182,212,0.2); border-color: rgba(6,182,212,0.4); }
+  .cat-halogen { background: rgba(59,130,246,0.2); border-color: rgba(59,130,246,0.4); }
+  .cat-noble { background: rgba(139,92,246,0.2); border-color: rgba(139,92,246,0.4); }
+  .cat-lanthanide { background: rgba(236,72,153,0.2); border-color: rgba(236,72,153,0.4); }
+  .cat-actinide { background: rgba(168,85,247,0.2); border-color: rgba(168,85,247,0.4); }
+  .cat-unknown { background: rgba(107,114,128,0.2); border-color: rgba(107,114,128,0.4); }
+  .legend { display: flex; flex-wrap: wrap; gap: var(--space-sm); margin-top: var(--space-lg); justify-content: center; }
+  .legend-item { font-size: 0.625rem; padding: 0.2rem 0.5rem; border-radius: 4px; text-transform: capitalize; border: 1px solid var(--border); }
+  .element-detail { max-width: 600px; margin: 0 auto var(--space-3xl); padding: var(--space-xl); }
+  .detail-placeholder { color: var(--text-muted); text-align: center; margin: 0; }
+  .detail-header { display: flex; gap: var(--space-lg); align-items: center; margin-bottom: var(--space-lg); }
+  .detail-symbol {
+    font-size: 2.5rem; font-weight: 700; font-family: var(--font-display);
+    width: 72px; height: 72px; display: flex; align-items: center; justify-content: center;
+    border-radius: var(--radius-md); border: 2px solid var(--border);
+  }
+  .detail-name { font-size: 1.5rem; margin: 0 0 var(--space-xs); color: var(--starlight); }
+  .detail-meta { font-size: 0.875rem; color: var(--text-secondary); margin: 0; }
+  .detail-props { display: grid; gap: var(--space-md); margin: 0; }
+  .detail-props div { display: grid; grid-template-columns: 120px 1fr; gap: var(--space-sm); }
+  .detail-props dt { font-size: 0.8125rem; color: var(--text-muted); }
+  .detail-props dd { margin: 0; color: var(--starlight); font-size: 0.9375rem; }
+  .education { margin-bottom: var(--space-3xl); }
+  .education p { color: var(--text-secondary); line-height: 1.7; }
+  @media (max-width: 600px) {
+    .periodic-grid { grid-template-columns: repeat(18, minmax(28px, 1fr)); gap: 2px; }
+    .element-cell { min-height: 36px; }
+    .el-symbol { font-size: 0.625rem; }
+    .el-z, .el-mass { font-size: 0.4rem; }
+    .detail-props div { grid-template-columns: 1fr; }
+  }
+</style>

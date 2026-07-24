@@ -1,0 +1,143 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const EVENTS = [
+  { id: 0, label: '13.8 Bya', title: 'The Big Bang', year: -13.8e9, desc: 'The universe begins — space, time, matter, and energy emerge from an infinitely hot, dense state. Within fractions of a second, inflation expands the cosmos exponentially.' },
+  { id: 1, label: '13.6 Bya', title: 'First Stars Ignite', year: -13.6e9, desc: 'Gravity pulls primordial hydrogen and helium into the first stellar furnaces. These Population III stars forge the first heavy elements through nuclear fusion.' },
+  { id: 2, label: '13.2 Bya', title: 'First Galaxies Form', year: -13.2e9, desc: 'Clusters of stars coalesce into the earliest galaxies. The James Webb Space Telescope now peers back to this era, revealing surprisingly mature structures.' },
+  { id: 3, label: '4.6 Bya', title: 'Solar System Forms', year: -4.6e9, desc: 'A molecular cloud collapses, forming our Sun at its center. Leftover material clumps into planets, moons, asteroids, and comets in a protoplanetary disk.' },
+  { id: 4, label: '4.5 Bya', title: 'Moon Created', year: -4.5e9, desc: 'A Mars-sized body named Theia collides with young Earth, ejecting debris that coalesces into the Moon — stabilizing Earth\'s axial tilt and tides.' },
+  { id: 5, label: '3.8 Bya', title: 'Life on Earth', year: -3.8e9, desc: 'Single-celled organisms emerge in Earth\'s oceans. Photosynthesis later transforms the atmosphere, paving the way for complex life.' },
+  { id: 6, label: '540 Mya', title: 'Cambrian Explosion', year: -540e6, desc: 'A burst of evolutionary diversity produces most major animal body plans in a geologically brief period — the foundation of modern ecosystems.' },
+  { id: 7, label: '66 Mya', title: 'Dinosaur Extinction', year: -66e6, desc: 'A 10-km asteroid impact at Chicxulub, Mexico, triggers global devastation. Mammals survive and eventually diversify into countless species.' },
+  { id: 8, label: '200 Ky', title: 'Modern Humans', year: -200000, desc: 'Homo sapiens appear in Africa. Over millennia, humans spread across every continent, developing language, art, agriculture, and technology.' },
+  { id: 9, label: '1609', title: 'Telescope Revolution', year: 1609, desc: 'Galileo turns his telescope to the heavens, discovering Jupiter\'s moons and Venus\'s phases — proving not everything orbits Earth.' },
+  { id: 10, label: '1957', title: 'Space Age Begins', year: 1957, desc: 'The Soviet Union launches Sputnik 1, the first artificial satellite. Humanity\'s reach extends beyond Earth\'s atmosphere for the first time.' },
+  { id: 11, label: '1969', title: 'Moon Landing', year: 1969, desc: 'Apollo 11 astronauts Neil Armstrong and Buzz Aldrin walk on the Moon. "One small step" marks humanity\'s greatest voyage of exploration.' },
+  { id: 12, label: '1990', title: 'Hubble Launched', year: 1990, desc: 'The Hubble Space Telescope opens a new window on the cosmos, capturing iconic images and refining the age of the universe to 13.8 billion years.' },
+  { id: 13, label: '2021', title: 'Webb Telescope', year: 2021, desc: 'NASA\'s James Webb Space Telescope launches, observing in infrared to study the first galaxies, exoplanet atmospheres, and star formation.' },
+  { id: 14, label: 'Today', title: 'The Present', year: 2025, desc: 'We live in an era of exoplanet discovery, Mars rovers, gravitational wave astronomy, and plans to return humans to the Moon and reach Mars.' },
+];
+
+const faqs = [
+  { question: 'How do scientists date events billions of years ago?', answer: 'Radiometric dating measures radioactive decay in rocks and meteorites. The oldest minerals on Earth are about 4.4 billion years old. Cosmic microwave background radiation provides a snapshot of the universe at 380,000 years after the Big Bang.' },
+  { question: 'What happened before the Big Bang?', answer: 'Current physics cannot describe conditions before the Big Bang — time itself may have begun at that moment. Theories like eternal inflation propose our universe is one bubble in a larger multiverse, but these remain speculative.' },
+  { question: 'Why is the timeline not linear?', answer: 'This slider uses a logarithmic-style compression so both cosmic and recent human events are visible. Billions of years of cosmic history are condensed relative to the last few centuries of human achievement.' },
+];
+---
+
+<PageLayout
+  title="Space Timeline Viewer"
+  description="Interactive timeline from the Big Bang to modern space exploration. Drag the slider to explore key milestones in cosmic history."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Space Timeline' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>⏳ Space Timeline Viewer</h1>
+      <p class="tool-intro">Drag the slider to travel through 13.8 billion years of cosmic history.</p>
+
+      <div class="timeline-tool glass-card">
+        <div class="slider-wrap">
+          <label for="timeline-slider" class="sr-only">Timeline position</label>
+          <input type="range" id="timeline-slider" min="0" max={EVENTS.length - 1} value="0" step="1" />
+          <div class="slider-labels" aria-hidden="true">
+            <span>Big Bang</span>
+            <span>Today</span>
+          </div>
+        </div>
+
+        <div class="event-display" id="event-display" aria-live="polite">
+          <time class="event-time" id="event-time">{EVENTS[0].label}</time>
+          <h2 class="event-title" id="event-title">{EVENTS[0].title}</h2>
+          <p class="event-desc" id="event-desc">{EVENTS[0].desc}</p>
+        </div>
+
+        <div class="event-nav" id="event-nav" role="tablist" aria-label="Timeline events">
+          {EVENTS.map((e, i) => (
+            <button type="button" class="nav-dot" data-index={i} role="tab" aria-selected={i === 0} aria-label={e.title}>
+              <span class="nav-label">{e.label}</span>
+            </button>
+          ))}
+        </div>
+      </div>
+
+      <div class="education">
+        <h2>Cosmic History at a Glance</h2>
+        <p>For 99.99% of cosmic history, Earth did not exist. Stars forged the carbon in your cells and the iron in your blood. Every atom heavier than hydrogen was cooked in a stellar core or forged in a supernova explosion — we are, quite literally, made of star stuff.</p>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script define:vars={{ events: EVENTS }}>
+  const slider = document.getElementById('timeline-slider');
+  const eventTime = document.getElementById('event-time');
+  const eventTitle = document.getElementById('event-title');
+  const eventDesc = document.getElementById('event-desc');
+  const navDots = document.querySelectorAll('.nav-dot');
+
+  function showEvent(index) {
+    const e = events[index];
+    if (!e) return;
+    slider.value = index;
+    eventTime.textContent = e.label;
+    eventTitle.textContent = e.title;
+    eventDesc.textContent = e.desc;
+    navDots.forEach((dot, i) => {
+      dot.classList.toggle('active', i === index);
+      dot.setAttribute('aria-selected', i === index ? 'true' : 'false');
+    });
+  }
+
+  slider?.addEventListener('input', () => showEvent(parseInt(slider.value, 10)));
+  navDots.forEach((dot) => {
+    dot.addEventListener('click', () => showEvent(parseInt(dot.dataset.index, 10)));
+  });
+
+  showEvent(0);
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .timeline-tool { padding: var(--space-2xl); margin-bottom: var(--space-3xl); max-width: 800px; margin-left: auto; margin-right: auto; }
+  .slider-wrap { margin-bottom: var(--space-2xl); }
+  #timeline-slider {
+    width: 100%; height: 8px; -webkit-appearance: none; appearance: none;
+    background: linear-gradient(90deg, var(--stellar), var(--aurora), var(--gold));
+    border-radius: 4px; outline: none; cursor: pointer;
+  }
+  #timeline-slider::-webkit-slider-thumb {
+    -webkit-appearance: none; width: 24px; height: 24px; border-radius: 50%;
+    background: var(--gold); border: 3px solid var(--void);
+    box-shadow: 0 0 16px rgba(251,191,36,0.5); cursor: grab;
+  }
+  #timeline-slider::-moz-range-thumb {
+    width: 24px; height: 24px; border-radius: 50%;
+    background: var(--gold); border: 3px solid var(--void);
+    box-shadow: 0 0 16px rgba(251,191,36,0.5); cursor: grab;
+  }
+  .slider-labels { display: flex; justify-content: space-between; margin-top: var(--space-sm); font-size: 0.75rem; color: var(--text-muted); }
+  .event-display { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.08); border-radius: var(--radius-md); margin-bottom: var(--space-xl); min-height: 180px; }
+  .event-time { font-family: var(--font-display); font-size: 0.875rem; font-weight: 600; color: var(--aurora); text-transform: uppercase; letter-spacing: 0.05em; display: block; margin-bottom: var(--space-sm); }
+  .event-title { font-size: 1.5rem; color: var(--starlight); margin: 0 0 var(--space-md); }
+  .event-desc { font-size: 0.9375rem; color: var(--text-secondary); line-height: 1.7; margin: 0; max-width: 600px; margin-inline: auto; }
+  .event-nav { display: flex; flex-wrap: wrap; gap: var(--space-xs); justify-content: center; }
+  .nav-dot {
+    padding: 0.35rem 0.6rem; font-size: 0.625rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-sm);
+    color: var(--text-muted); cursor: pointer; transition: all var(--transition-fast);
+  }
+  .nav-dot:hover, .nav-dot.active { background: rgba(124,58,237,0.25); border-color: var(--aurora); color: var(--starlight); }
+  .nav-label { white-space: nowrap; }
+  .education { margin-bottom: var(--space-3xl); max-width: 800px; margin-left: auto; margin-right: auto; }
+  .education p { color: var(--text-secondary); line-height: 1.7; }
+  .sr-only { position: absolute; width: 1px; height: 1px; padding: 0; margin: -1px; overflow: hidden; clip: rect(0,0,0,0); border: 0; }
+  @media (max-width: 480px) {
+    .nav-dot { padding: 0.3rem 0.4rem; font-size: 0.55rem; }
+    .event-title { font-size: 1.25rem; }
+  }
+</style>

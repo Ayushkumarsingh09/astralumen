@@ -1,0 +1,338 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+---
+
+<PageLayout
+  title="Search Articles"
+  description="Search AstraLumen's library of science articles across space, astronomy, biology, physics, Earth science, and more."
+  breadcrumbs={[{ label: 'Search' }]}
+  noindex={true}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="hero-icon" aria-hidden="true">🔍</span>
+      <h1>Search Articles</h1>
+      <p class="hero-lead">Explore our library of science education content.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="search-bar glass-card">
+        <label for="search-input" class="sr-only">Search articles</label>
+        <input
+          type="search"
+          id="search-input"
+          placeholder="Search by title, topic, or keyword…"
+          autocomplete="off"
+          aria-describedby="search-status"
+        />
+        <span class="search-icon" aria-hidden="true">🔭</span>
+      </div>
+
+      <p id="search-status" class="search-status" role="status" aria-live="polite"></p>
+
+      <div id="search-results" class="results-grid"></div>
+
+      <div id="search-empty" class="search-empty glass-card" hidden>
+        <span class="empty-icon" aria-hidden="true">🌑</span>
+        <h2>No results found</h2>
+        <p>Try different keywords or browse our <a href="/sitemap">sitemap</a> to explore topics.</p>
+      </div>
+
+      <div id="search-loading" class="search-loading">
+        <span class="loading-spinner" aria-hidden="true"></span>
+        <p>Loading article index…</p>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  interface ArticleIndexEntry {
+    slug: string;
+    title: string;
+    description: string;
+    category: string;
+    categoryTitle: string;
+    tags: string[];
+    author: string;
+    publishedDate: string;
+    readingTime: number;
+    url: string;
+  }
+
+  const input = document.getElementById('search-input') as HTMLInputElement;
+  const resultsEl = document.getElementById('search-results')!;
+  const statusEl = document.getElementById('search-status')!;
+  const emptyEl = document.getElementById('search-empty')!;
+  const loadingEl = document.getElementById('search-loading')!;
+
+  let articles: ArticleIndexEntry[] = [];
+  let debounceTimer: ReturnType<typeof setTimeout>;
+
+  async function loadIndex() {
+    try {
+      const res = await fetch('/articles-index.json');
+      articles = await res.json();
+      loadingEl.hidden = true;
+      statusEl.textContent = `${articles.length} articles indexed. Start typing to search.`;
+
+      const params = new URLSearchParams(window.location.search);
+      const q = params.get('q');
+      if (q) {
+        input.value = q;
+        performSearch(q);
+      }
+    } catch {
+      loadingEl.hidden = true;
+      statusEl.textContent = 'Unable to load search index. Please try again later.';
+    }
+  }
+
+  function performSearch(query: string) {
+    const q = query.trim().toLowerCase();
+
+    if (!q) {
+      resultsEl.innerHTML = '';
+      emptyEl.hidden = true;
+      statusEl.textContent = `${articles.length} articles indexed. Start typing to search.`;
+      return;
+    }
+
+    const terms = q.split(/\s+/);
+    const matches = articles.filter((article) => {
+      const haystack = [
+        article.title,
+        article.description,
+        article.category,
+        article.categoryTitle,
+        article.author,
+        ...article.tags,
+      ]
+        .join(' ')
+        .toLowerCase();
+      return terms.every((term) => haystack.includes(term));
+    });
+
+    statusEl.textContent = `${matches.length} result${matches.length !== 1 ? 's' : ''} for "${query}"`;
+
+    if (matches.length === 0) {
+      resultsEl.innerHTML = '';
+      emptyEl.hidden = false;
+      return;
+    }
+
+    emptyEl.hidden = true;
+    resultsEl.innerHTML = matches
+      .map(
+        (a) => `
+        <a href="${a.url}" class="result-card glass-card">
+          <span class="result-category">${a.categoryTitle}</span>
+          <h2>${highlight(a.title, q)}</h2>
+          <p>${highlight(a.description, q)}</p>
+          <span class="result-meta">${a.readingTime} min read · ${formatDate(a.publishedDate)}</span>
+        </a>
+      `
+      )
+      .join('');
+  }
+
+  function highlight(text: string, query: string): string {
+    const terms = query.split(/\s+/).filter(Boolean);
+    let result = text;
+    for (const term of terms) {
+      const regex = new RegExp(`(${escapeRegex(term)})`, 'gi');
+      result = result.replace(regex, '<mark>$1</mark>');
+    }
+    return result;
+  }
+
+  function escapeRegex(str: string): string {
+    return str.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+  }
+
+  function formatDate(dateStr: string): string {
+    return new Date(dateStr).toLocaleDateString('en-US', {
+      year: 'numeric',
+      month: 'short',
+      day: 'numeric',
+    });
+  }
+
+  input?.addEventListener('input', () => {
+    clearTimeout(debounceTimer);
+    debounceTimer = setTimeout(() => {
+      const q = input.value;
+      const url = new URL(window.location.href);
+      if (q) {
+        url.searchParams.set('q', q);
+      } else {
+        url.searchParams.delete('q');
+      }
+      history.replaceState(null, '', url.toString());
+      performSearch(q);
+    }, 200);
+  });
+
+  loadIndex();
+</script>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-lead {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-top: var(--space-md);
+  }
+
+  .search-bar {
+    position: relative;
+    max-width: 700px;
+    margin: 0 auto var(--space-lg);
+    padding: var(--space-sm);
+  }
+
+  .search-bar input {
+    width: 100%;
+    padding: 1rem 1.25rem 1rem 3rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--starlight);
+    font-size: 1rem;
+    font-family: var(--font-body);
+  }
+
+  .search-bar input::placeholder {
+    color: var(--text-muted);
+  }
+
+  .search-bar input:focus {
+    border-color: var(--stellar);
+    outline: none;
+    box-shadow: var(--glow-stellar);
+  }
+
+  .search-icon {
+    position: absolute;
+    left: 1.25rem;
+    top: 50%;
+    transform: translateY(-50%);
+    font-size: 1.25rem;
+    pointer-events: none;
+  }
+
+  .search-status {
+    text-align: center;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-xl);
+    min-height: 1.25rem;
+  }
+
+  .results-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: var(--space-xl);
+    padding-bottom: var(--space-4xl);
+  }
+
+  .result-card {
+    text-decoration: none;
+    color: inherit;
+    padding: var(--space-xl);
+  }
+
+  .result-category {
+    display: inline-block;
+    font-size: 0.75rem;
+    font-family: var(--font-display);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--aurora);
+    margin-bottom: var(--space-sm);
+  }
+
+  .result-card h2 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-sm);
+    color: var(--starlight);
+  }
+
+  .result-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+    display: -webkit-box;
+    -webkit-line-clamp: 3;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+  }
+
+  .result-meta {
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+
+  :global(.result-card mark) {
+    background: rgba(124, 58, 237, 0.3);
+    color: var(--stellar-light);
+    border-radius: 2px;
+    padding: 0 2px;
+  }
+
+  .search-empty {
+    text-align: center;
+    max-width: 500px;
+    margin: 0 auto var(--space-4xl);
+    padding: var(--space-3xl);
+  }
+
+  .empty-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .search-empty h2 {
+    font-size: 1.25rem;
+    margin-bottom: var(--space-md);
+  }
+
+  .search-empty p {
+    color: var(--text-secondary);
+    margin: 0;
+  }
+
+  .search-loading {
+    text-align: center;
+    padding: var(--space-3xl);
+    color: var(--text-muted);
+  }
+
+  .loading-spinner {
+    display: inline-block;
+    width: 32px;
+    height: 32px;
+    border: 3px solid var(--border);
+    border-top-color: var(--stellar);
+    border-radius: 50%;
+    animation: spin 0.8s linear infinite;
+    margin-bottom: var(--space-md);
+  }
+
+  @keyframes spin {
+    to { transform: rotate(360deg); }
+  }
+</style>

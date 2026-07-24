@@ -1,0 +1,181 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { NAVIGATION, FOOTER_LINKS, CATEGORY_META, CATEGORIES } from '@/config/site';
+import { AUTHORS } from '@/data/authors';
+---
+
+<PageLayout
+  title="Sitemap"
+  description="Browse all sections, categories, tools, and pages on AstraLumen — your guide to science and space education content."
+  breadcrumbs={[{ label: 'Sitemap' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="hero-icon" aria-hidden="true">🗺️</span>
+      <h1>Sitemap</h1>
+      <p class="hero-lead">Navigate every corner of AstraLumen.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container sitemap-grid">
+      <div class="sitemap-section glass-card">
+        <h2>Main</h2>
+        <ul>
+          <li><a href="/">Home</a></li>
+          <li><a href="/about">About Us</a></li>
+          <li><a href="/contact">Contact</a></li>
+          <li><a href="/faq">FAQ</a></li>
+          <li><a href="/search">Search Articles</a></li>
+          <li><a href="/authors">Authors</a></li>
+          <li><a href="/rss.xml">RSS Feed</a></li>
+        </ul>
+      </div>
+
+      <div class="sitemap-section glass-card">
+        <h2>Science Hubs</h2>
+        <ul>
+          {NAVIGATION.map((item) => (
+            <li>
+              <a href={item.href}>{item.label}</a>
+              {item.children && (
+                <ul>
+                  {item.children.map((child) => (
+                    <li><a href={child.href}>{child.label}</a></li>
+                  ))}
+                </ul>
+              )}
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="sitemap-section glass-card">
+        <h2>All Categories</h2>
+        <ul class="category-list">
+          {CATEGORIES.map((cat) => (
+            <li>
+              <a href={`/${cat}`}>
+                <span aria-hidden="true">{CATEGORY_META[cat].icon}</span>
+                {CATEGORY_META[cat].title}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="sitemap-section glass-card">
+        <h2>Science Tools</h2>
+        <ul>
+          <li><a href="/science-tools">All Science Tools</a></li>
+          <li><a href="/science-tools/planet-weight-calculator">Planet Weight Calculator</a></li>
+          <li><a href="/science-tools/age-on-planets">Age on Other Planets</a></li>
+          <li><a href="/science-tools/light-year-converter">Light Year Converter</a></li>
+          <li><a href="/science-tools/distance-converter">Distance Converter</a></li>
+          <li><a href="/science-tools/gravity-calculator">Gravity Calculator</a></li>
+          <li><a href="/science-tools/scientific-notation">Scientific Notation Calculator</a></li>
+          <li><a href="/science-tools/unit-converter">Unit Converter</a></li>
+          <li><a href="/science-tools/periodic-table">Periodic Table Explorer</a></li>
+          <li><a href="/science-tools/solar-system-explorer">Solar System Explorer</a></li>
+          <li><a href="/science-tools/space-timeline">Space Timeline Viewer</a></li>
+        </ul>
+      </div>
+
+      <div class="sitemap-section glass-card">
+        <h2>Authors</h2>
+        <ul>
+          {AUTHORS.map((author) => (
+            <li><a href={`/authors/${author.id}`}>{author.name}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="sitemap-section glass-card">
+        <h2>Resources</h2>
+        <ul>
+          {FOOTER_LINKS.resources.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+
+      <div class="sitemap-section glass-card">
+        <h2>Legal &amp; Policies</h2>
+        <ul>
+          {FOOTER_LINKS.legal.map((link) => (
+            <li><a href={link.href}>{link.label}</a></li>
+          ))}
+        </ul>
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-lead {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    margin-top: var(--space-md);
+  }
+
+  .sitemap-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    gap: var(--space-xl);
+    padding-bottom: var(--space-4xl);
+  }
+
+  .sitemap-section h2 {
+    font-size: 1rem;
+    color: var(--stellar-light);
+    margin-bottom: var(--space-lg);
+    padding-bottom: var(--space-sm);
+    border-bottom: 1px solid var(--border);
+  }
+
+  .sitemap-section ul {
+    list-style: none;
+    padding: 0;
+    margin: 0;
+  }
+
+  .sitemap-section > ul > li {
+    margin-bottom: var(--space-sm);
+  }
+
+  .sitemap-section ul ul {
+    padding-left: var(--space-lg);
+    margin-top: var(--space-xs);
+  }
+
+  .sitemap-section ul ul li {
+    margin-bottom: var(--space-xs);
+  }
+
+  .sitemap-section a {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    transition: color var(--transition-fast);
+  }
+
+  .sitemap-section a:hover {
+    color: var(--aurora-light);
+  }
+
+  .category-list a {
+    display: flex;
+    align-items: center;
+    gap: var(--space-sm);
+  }
+</style>

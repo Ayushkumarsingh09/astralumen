@@ -1,0 +1,125 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const G = 6.6743e-11;
+
+const faqs = [
+  { question: 'What is the gravitational constant G?', answer: 'G is approximately 6.674 × 10⁻¹¹ N·m²/kg². It appears in Newton\'s law of universal gravitation and quantifies how strongly masses attract each other.' },
+  { question: 'Why is gravitational force so weak in everyday life?', answer: 'G is an extremely small number. You only notice gravity when at least one mass is planetary-scale. Two everyday objects exert a tiny force on each other — far too small to feel.' },
+  { question: 'Does this formula work for black holes or neutron stars?', answer: 'Newton\'s law is accurate for weak fields and large distances compared to object size. Near very dense bodies or at extreme precision, Einstein\'s general relativity provides more accurate predictions.' },
+];
+---
+
+<PageLayout
+  title="Gravity Calculator"
+  description="Calculate gravitational force between two masses using Newton's law F = Gm₁m₂/r² with this free physics calculator."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Gravity Calculator' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>🍎 Gravity Calculator</h1>
+      <p class="tool-intro">Calculate the gravitational force between two objects using Newton's law of universal gravitation.</p>
+
+      <div class="calculator glass-card">
+        <div class="input-group">
+          <label for="mass1">Mass 1 (kg)</label>
+          <input type="number" id="mass1" value="5.972e24" step="any" />
+        </div>
+        <div class="input-group">
+          <label for="mass2">Mass 2 (kg)</label>
+          <input type="number" id="mass2" value="70" step="any" />
+        </div>
+        <div class="input-group">
+          <label for="distance">Distance between centers (m)</label>
+          <input type="number" id="distance" value="6.371e6" step="any" />
+        </div>
+        <div class="presets">
+          <span class="presets-label">Quick presets:</span>
+          <button type="button" class="preset-btn" data-m1="5.972e24" data-m2="70" data-r="6.371e6">Earth & person</button>
+          <button type="button" class="preset-btn" data-m1="1.989e30" data-m2="5.972e24" data-r="1.496e11">Sun & Earth</button>
+          <button type="button" class="preset-btn" data-m1="7.342e22" data-m2="70" data-r="1.737e6">Moon & person</button>
+        </div>
+        <div class="result" aria-live="polite">
+          <span class="result-label">Gravitational force</span>
+          <span class="result-value" id="result-value">—</span>
+        </div>
+      </div>
+
+      <div class="education">
+        <h2>Newton's Law of Gravitation</h2>
+        <p>Every mass attracts every other mass with a force proportional to the product of their masses and inversely proportional to the square of the distance between their centers: <strong>F = G × m₁ × m₂ / r²</strong>.</p>
+        <p>On Earth's surface, this force is what we experience as weight. A 70 kg person on Earth (mass 5.97 × 10²⁴ kg, radius 6,371 km) experiences about 686 N of gravitational force — roughly 70 kgf.</p>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script define:vars={{ G }}>
+  const mass1El = document.getElementById('mass1');
+  const mass2El = document.getElementById('mass2');
+  const distanceEl = document.getElementById('distance');
+  const resultEl = document.getElementById('result-value');
+
+  function formatForce(n) {
+    if (!isFinite(n) || n === 0) return '0 N';
+    const abs = Math.abs(n);
+    if (abs >= 1e6 || abs < 0.001) return n.toExponential(4) + ' N';
+    return n.toLocaleString('en-US', { maximumFractionDigits: 4 }) + ' N';
+  }
+
+  function calculate() {
+    const m1 = parseFloat(mass1El.value) || 0;
+    const m2 = parseFloat(mass2El.value) || 0;
+    const r = parseFloat(distanceEl.value) || 0;
+    if (r <= 0) {
+      resultEl.textContent = 'Distance must be > 0';
+      return;
+    }
+    const force = (G * m1 * m2) / (r * r);
+    resultEl.textContent = formatForce(force);
+  }
+
+  [mass1El, mass2El, distanceEl].forEach((el) => {
+    el?.addEventListener('input', calculate);
+  });
+
+  document.querySelectorAll('.preset-btn').forEach((btn) => {
+    btn.addEventListener('click', () => {
+      mass1El.value = btn.dataset.m1;
+      mass2El.value = btn.dataset.m2;
+      distanceEl.value = btn.dataset.r;
+      calculate();
+    });
+  });
+
+  calculate();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 520px; margin-bottom: var(--space-3xl); }
+  .input-group { margin-bottom: var(--space-lg); }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--starlight);
+    font-family: var(--font-mono); font-size: 0.9375rem;
+  }
+  .presets { margin-bottom: var(--space-lg); display: flex; flex-wrap: wrap; gap: var(--space-sm); align-items: center; }
+  .presets-label { font-size: 0.8125rem; color: var(--text-muted); width: 100%; }
+  .preset-btn {
+    padding: 0.4rem 0.75rem; font-size: 0.75rem; background: rgba(124,58,237,0.2);
+    border: 1px solid var(--border); border-radius: var(--radius-sm); color: var(--aurora);
+    cursor: pointer; transition: background var(--transition-fast);
+  }
+  .preset-btn:hover { background: rgba(124,58,237,0.35); }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.1); border-radius: var(--radius-md); }
+  .result-label { display: block; font-size: 0.875rem; color: var(--text-muted); margin-bottom: var(--space-sm); }
+  .result-value { font-family: var(--font-mono); font-size: 1.5rem; color: var(--gold); word-break: break-word; }
+  .education { margin-bottom: var(--space-3xl); }
+  .education p { color: var(--text-secondary); line-height: 1.7; margin-bottom: var(--space-md); }
+</style>

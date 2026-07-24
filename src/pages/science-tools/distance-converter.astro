@@ -1,0 +1,129 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import FAQ from '@components/FAQ.astro';
+
+const faqs = [
+  { question: 'What is an astronomical unit (AU)?', answer: 'One AU is the average distance from Earth to the Sun — about 149.6 million kilometers or 93 million miles. Astronomers use AU for distances within our solar system.' },
+  { question: 'How many meters are in a light year?', answer: 'A light year is approximately 9.461 × 10¹⁵ meters. Light travels at 299,792,458 m/s and takes one year to cover that distance.' },
+  { question: 'When should I use miles vs kilometers?', answer: 'Kilometers are standard in science and most countries. Miles are common in the US and UK for everyday distances. For cosmic scales, light years and AU are more practical.' },
+];
+---
+
+<PageLayout
+  title="Distance Converter"
+  description="Convert between meters, kilometers, miles, astronomical units, and light years with this free scientific distance converter."
+  breadcrumbs={[{ label: 'Science Tools', href: '/science-tools' }, { label: 'Distance Converter' }]}
+>
+  <section class="tool-page">
+    <div class="container">
+      <h1>📏 Distance Converter</h1>
+      <p class="tool-intro">Convert between everyday and cosmic distance units used in science and astronomy.</p>
+
+      <div class="calculator glass-card">
+        <div class="input-group">
+          <label for="value">Value</label>
+          <input type="number" id="value" value="1" step="any" />
+        </div>
+        <div class="input-row">
+          <div class="input-group">
+            <label for="from-unit">From</label>
+            <select id="from-unit">
+              <option value="m">Meters</option>
+              <option value="km">Kilometers</option>
+              <option value="mi">Miles</option>
+              <option value="au">Astronomical Units</option>
+              <option value="ly">Light Years</option>
+            </select>
+          </div>
+          <div class="input-group">
+            <label for="to-unit">To</label>
+            <select id="to-unit">
+              <option value="km">Kilometers</option>
+              <option value="m">Meters</option>
+              <option value="mi">Miles</option>
+              <option value="au">Astronomical Units</option>
+              <option value="ly">Light Years</option>
+            </select>
+          </div>
+        </div>
+        <div class="result" aria-live="polite">
+          <span class="result-value" id="result-value">—</span>
+        </div>
+      </div>
+
+      <div class="education">
+        <h2>Understanding Distance Scales</h2>
+        <p>Scientists use different units depending on scale. Meters and kilometers work for Earth-bound measurements, while astronomical units and light years help describe the vast distances between stars and galaxies.</p>
+        <table>
+          <thead><tr><th>Unit</th><th>Equivalent</th><th>Example</th></tr></thead>
+          <tbody>
+            <tr><td>1 meter</td><td>Base SI unit</td><td>Height of a door</td></tr>
+            <tr><td>1 kilometer</td><td>1,000 m</td><td>10-minute walk</td></tr>
+            <tr><td>1 mile</td><td>1.609 km</td><td>Standard running race</td></tr>
+            <tr><td>1 AU</td><td>149.6 million km</td><td>Earth–Sun distance</td></tr>
+            <tr><td>1 light year</td><td>9.461 trillion km</td><td>Nearest star system</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <FAQ faqs={faqs} />
+    </div>
+  </section>
+</PageLayout>
+
+<script>
+  const LY_M = 9.461e15;
+  const toMeters: Record<string, number> = {
+    m: 1, km: 1e3, mi: 1609.34, au: 1.496e11, ly: LY_M,
+  };
+  const labels: Record<string, string> = {
+    m: 'meters', km: 'kilometers', mi: 'miles', au: 'AU', ly: 'light years',
+  };
+
+  const valueEl = document.getElementById('value') as HTMLInputElement;
+  const fromEl = document.getElementById('from-unit') as HTMLSelectElement;
+  const toEl = document.getElementById('to-unit') as HTMLSelectElement;
+  const resultEl = document.getElementById('result-value');
+
+  function formatResult(n: number): string {
+    if (n === 0) return '0';
+    if (Math.abs(n) >= 1e6 || Math.abs(n) < 0.001) return n.toExponential(4);
+    return n.toLocaleString(undefined, { maximumFractionDigits: 6 });
+  }
+
+  function convert() {
+    const val = parseFloat(valueEl.value) || 0;
+    const meters = val * toMeters[fromEl.value];
+    const result = meters / toMeters[toEl.value];
+    if (resultEl) resultEl.textContent = formatResult(result) + ' ' + labels[toEl.value];
+  }
+
+  [valueEl, fromEl, toEl].forEach((el) => {
+    el?.addEventListener('input', convert);
+    el?.addEventListener('change', convert);
+  });
+  convert();
+</script>
+
+<style>
+  .tool-page { padding: var(--space-2xl) 0 var(--space-4xl); }
+  .tool-intro { color: var(--text-secondary); margin-bottom: var(--space-2xl); }
+  .calculator { max-width: 500px; margin-bottom: var(--space-3xl); }
+  .input-group { margin-bottom: var(--space-lg); flex: 1; }
+  .input-group label { display: block; font-size: 0.875rem; color: var(--text-secondary); margin-bottom: var(--space-sm); }
+  .input-group input, .input-group select {
+    width: 100%; padding: 0.75rem 1rem; background: rgba(0,0,0,0.3);
+    border: 1px solid var(--border); border-radius: var(--radius-md); color: var(--starlight);
+  }
+  .input-row { display: flex; gap: var(--space-md); flex-wrap: wrap; }
+  .result { text-align: center; padding: var(--space-xl); background: rgba(124,58,237,0.1); border-radius: var(--radius-md); }
+  .result-value { font-family: var(--font-mono); font-size: 1.5rem; color: var(--gold); word-break: break-word; }
+  .education { margin-bottom: var(--space-3xl); }
+  .education table { width: 100%; border-collapse: collapse; margin-top: var(--space-lg); font-size: 0.9375rem; }
+  .education th, .education td { padding: var(--space-md); border: 1px solid var(--border); text-align: left; }
+  .education th { background: rgba(124,58,237,0.15); font-family: var(--font-display); font-size: 0.8125rem; }
+  @media (max-width: 480px) {
+    .input-row { flex-direction: column; }
+    .result-value { font-size: 1.25rem; }
+  }
+</style>

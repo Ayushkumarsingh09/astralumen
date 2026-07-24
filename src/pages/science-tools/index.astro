@@ -1,0 +1,95 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+
+const tools = [
+  { slug: 'planet-weight-calculator', name: 'Planet Weight Calculator', icon: '⚖️', desc: 'Calculate your weight on different planets based on surface gravity.' },
+  { slug: 'age-on-planets', name: 'Age on Other Planets', icon: '🎂', desc: 'Discover how old you would be on Mercury, Venus, Mars, and more.' },
+  { slug: 'light-year-converter', name: 'Light Year Converter', icon: '💫', desc: 'Convert between light years, astronomical units, kilometers, and miles.' },
+  { slug: 'distance-converter', name: 'Distance Converter', icon: '📏', desc: 'Convert cosmic and terrestrial distance units with scientific precision.' },
+  { slug: 'gravity-calculator', name: 'Gravity Calculator', icon: '🍎', desc: 'Calculate gravitational force between two objects using Newton\'s law.' },
+  { slug: 'scientific-notation', name: 'Scientific Notation Calculator', icon: '🔢', desc: 'Convert numbers to and from scientific notation for astronomy and physics.' },
+  { slug: 'unit-converter', name: 'Unit Converter', icon: '🔄', desc: 'Convert temperature, pressure, energy, and other scientific units.' },
+  { slug: 'periodic-table', name: 'Periodic Table Explorer', icon: '🧪', desc: 'Interactive periodic table with element properties and facts.' },
+  { slug: 'solar-system-explorer', name: 'Solar System Explorer', icon: '🪐', desc: 'Explore planets, orbits, and comparative data of our solar system.' },
+  { slug: 'space-timeline', name: 'Space Timeline Viewer', icon: '⏳', desc: 'Interactive timeline from the Big Bang to modern space exploration.' },
+];
+---
+
+<PageLayout
+  title="Science Tools — Interactive Calculators & Explorers"
+  description="Free interactive science tools including planet weight calculator, light year converter, periodic table, and solar system explorer."
+  breadcrumbs={[{ label: 'Science Tools' }]}
+>
+  <section class="tools-hero">
+    <div class="container">
+      <h1>Science Tools</h1>
+      <p>Interactive calculators and explorers to deepen your understanding of science.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container">
+      <div class="tools-grid">
+        {tools.map((tool) => (
+          <a href={`/science-tools/${tool.slug}`} class="tool-card glass-card">
+            <span class="tool-icon">{tool.icon}</span>
+            <h2>{tool.name}</h2>
+            <p>{tool.desc}</p>
+            <span class="tool-link">Launch Tool →</span>
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .tools-hero {
+    padding: var(--space-3xl) 0;
+    text-align: center;
+  }
+
+  .tools-hero p {
+    color: var(--text-secondary);
+    max-width: 500px;
+    margin: var(--space-md) auto 0;
+  }
+
+  .tools-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .tool-card {
+    text-decoration: none;
+    color: inherit;
+    text-align: center;
+  }
+
+  .tool-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-md);
+  }
+
+  .tool-card h2 {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-sm);
+    color: var(--stellar-light);
+  }
+
+  .tool-card p {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-lg);
+  }
+
+  .tool-link {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--aurora);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>
