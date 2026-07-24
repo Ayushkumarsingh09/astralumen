@@ -1,0 +1,119 @@
+---
+const hubs = [
+  {
+    title: 'Astronomy Hub',
+    icon: '🔭',
+    description: 'Planets, stars, galaxies, and the tools we use to observe the universe.',
+    href: '/astronomy',
+    topics: ['Planets', 'Stars', 'Galaxies', 'Black Holes'],
+    gradient: 'from-purple-900/40 to-cyan-900/20',
+    color: '#7c3aed',
+  },
+  {
+    title: 'Earth Science Hub',
+    icon: '🌍',
+    description: 'Volcanoes, oceans, climate systems, and the dynamic forces shaping our planet.',
+    href: '/earth-science',
+    topics: ['Geology', 'Climate', 'Oceans', 'Weather'],
+    color: '#3b82f6',
+  },
+  {
+    title: 'Biology Hub',
+    icon: '🧬',
+    description: 'From DNA to ecosystems — explore the science of life in all its diversity.',
+    href: '/biology',
+    topics: ['Cells', 'Evolution', 'Animals', 'Human Body'],
+    color: '#10b981',
+  },
+];
+---
+
+<section class="section hubs" aria-labelledby="hubs-heading">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-label">Science Domains</span>
+      <h2 id="hubs-heading" class="section-title">Explore Science Hubs</h2>
+    </header>
+
+    <div class="hubs-grid">
+      {hubs.map((hub) => (
+        <a href={hub.href} class="hub-card glass-card" style={`--hub-color: ${hub.color}`}>
+          <span class="hub-icon">{hub.icon}</span>
+          <h3 class="hub-title">{hub.title}</h3>
+          <p class="hub-desc">{hub.description}</p>
+          <ul class="hub-topics">
+            {hub.topics.map((t) => (
+              <li>{t}</li>
+            ))}
+          </ul>
+          <span class="hub-cta">Enter Hub →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .hubs-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    gap: var(--space-xl);
+  }
+
+  .hub-card {
+    text-decoration: none;
+    color: inherit;
+    border-top: 3px solid var(--hub-color);
+  }
+
+  .hub-card:hover {
+    border-top-color: var(--hub-color);
+    box-shadow: 0 0 40px color-mix(in srgb, var(--hub-color) 25%, transparent);
+  }
+
+  .hub-icon {
+    font-size: 3rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hub-title {
+    font-family: var(--font-display);
+    font-size: 1.25rem;
+    color: var(--hub-color);
+    margin-bottom: var(--space-md);
+  }
+
+  .hub-desc {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin-bottom: var(--space-lg);
+    line-height: 1.6;
+  }
+
+  .hub-topics {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    list-style: none;
+    padding: 0;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hub-topics li {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(255, 255, 255, 0.05);
+    border-radius: var(--radius-full);
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .hub-cta {
+    font-size: 0.8125rem;
+    font-weight: 600;
+    color: var(--aurora);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>

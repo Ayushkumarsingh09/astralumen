@@ -1,0 +1,85 @@
+---
+const facts = [
+  { fact: 'A day on Venus is longer than its year — it rotates so slowly that one Venusian day lasts 243 Earth days.', category: 'Space' },
+  { fact: 'Honey never spoils. Archaeologists have found 3,000-year-old honey in Egyptian tombs that was still edible.', category: 'Biology' },
+  { fact: 'Light from the Sun takes about 8 minutes and 20 seconds to reach Earth.', category: 'Physics' },
+  { fact: 'The human brain contains approximately 86 billion neurons — more than the number of stars in the Milky Way.', category: 'Biology' },
+  { fact: 'Diamonds rain on Neptune and Uranus due to extreme pressure converting carbon into diamond crystals.', category: 'Space' },
+  { fact: 'Octopuses have three hearts and blue blood, and two-thirds of their neurons are in their arms.', category: 'Animals' },
+];
+---
+
+<section class="section facts-section" aria-labelledby="facts-heading">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-label">Did You Know?</span>
+      <h2 id="facts-heading" class="section-title">Science Fact Cards</h2>
+    </header>
+
+    <div class="facts-grid">
+      {facts.map((item, i) => (
+        <div class="fact-card glass-card" style={`--i: ${i}`}>
+          <span class="fact-category">{item.category}</span>
+          <p class="fact-text">{item.fact}</p>
+        </div>
+      ))}
+    </div>
+
+    <div class="facts-cta">
+      <a href="/science-facts" class="btn btn-ghost">More Science Facts</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .facts-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: var(--space-lg);
+  }
+
+  .fact-card {
+    position: relative;
+    overflow: hidden;
+    animation: factIn 0.5s ease calc(var(--i) * 0.1s) forwards;
+    opacity: 0;
+  }
+
+  @keyframes factIn {
+    to { opacity: 1; transform: translateY(0); }
+    from { opacity: 0; transform: translateY(20px); }
+  }
+
+  .fact-card::before {
+    content: '✦';
+    position: absolute;
+    top: var(--space-md);
+    right: var(--space-md);
+    color: var(--gold);
+    opacity: 0.5;
+    font-size: 1.5rem;
+  }
+
+  .fact-category {
+    font-family: var(--font-display);
+    font-size: 0.6875rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    color: var(--aurora);
+    display: block;
+    margin-bottom: var(--space-md);
+  }
+
+  .fact-text {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.7;
+    margin: 0;
+  }
+
+  .facts-cta {
+    text-align: center;
+    margin-top: var(--space-2xl);
+  }
+</style>

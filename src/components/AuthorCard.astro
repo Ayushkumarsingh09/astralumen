@@ -1,0 +1,97 @@
+---
+import type { Author } from '@/data/authors';
+
+interface Props {
+  author: Author;
+}
+const { author } = Astro.props;
+---
+
+<div class="author-card glass-card">
+  <div class="author-header">
+    <img
+      src={author.avatar}
+      alt={author.name}
+      width="64"
+      height="64"
+      class="author-avatar"
+      loading="lazy"
+    />
+    <div>
+      <h3 class="author-name">{author.name}</h3>
+      <p class="author-title">{author.title}</p>
+      <p class="author-credentials">{author.credentials}</p>
+    </div>
+  </div>
+  <p class="author-bio">{author.bio}</p>
+  <div class="author-expertise">
+    {author.expertise.map((e) => (
+      <span class="expertise-tag">{e}</span>
+    ))}
+  </div>
+  <a href={`/authors/${author.id}`} class="author-link">View full profile →</a>
+</div>
+
+<style>
+  .author-card {
+    max-width: 600px;
+  }
+
+  .author-header {
+    display: flex;
+    gap: var(--space-lg);
+    margin-bottom: var(--space-lg);
+  }
+
+  .author-avatar {
+    border-radius: var(--radius-full);
+    border: 2px solid var(--border);
+    flex-shrink: 0;
+  }
+
+  .author-name {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-xs);
+  }
+
+  .author-title {
+    font-size: 0.875rem;
+    color: var(--aurora);
+    margin-bottom: var(--space-xs);
+  }
+
+  .author-credentials {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin: 0;
+  }
+
+  .author-bio {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    line-height: 1.6;
+    margin-bottom: var(--space-lg);
+  }
+
+  .author-expertise {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-sm);
+    margin-bottom: var(--space-lg);
+  }
+
+  .expertise-tag {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.75rem;
+    background: rgba(6, 182, 212, 0.1);
+    border: 1px solid rgba(6, 182, 212, 0.3);
+    border-radius: var(--radius-full);
+    color: var(--aurora-light);
+  }
+
+  .author-link {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--stellar-light);
+  }
+</style>
