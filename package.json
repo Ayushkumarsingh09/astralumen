@@ -1,0 +1,23 @@
+{
+  "name": "astralumen",
+  "type": "module",
+  "version": "1.0.0",
+  "description": "AstraLumen - World-class science, space & discovery platform",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "generate:articles": "node scripts/generate-articles.mjs",
+    "fetch:images": "node scripts/fetch-nasa-images.mjs",
+    "validate:images": "node scripts/validate-images.mjs",
+    "audit": "node scripts/audit.mjs"
+  },
+  "dependencies": {
+    "@astrojs/rss": "^4.0.9",
+    "astro": "^4.16.0"
+  },
+  "devDependencies": {
+    "@types/node": "^20.14.0",
+    "typescript": "^5.5.0"
+  }
+}
