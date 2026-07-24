@@ -1,0 +1,117 @@
+---
+const timeline = [
+  { time: '13.8 Billion Years Ago', event: 'The Big Bang', desc: 'The universe begins — space, time, and energy emerge from an infinitely dense singularity.' },
+  { time: '13.6 Billion Years Ago', event: 'First Stars Ignite', desc: 'Gravity pulls hydrogen into the first stellar furnaces, forging heavier elements.' },
+  { time: '4.6 Billion Years Ago', event: 'Solar System Forms', desc: 'A cloud of gas and dust collapses, birthing our Sun and its planetary family.' },
+  { time: '3.8 Billion Years Ago', event: 'Life on Earth', desc: 'Simple single-celled organisms emerge in Earth\'s ancient oceans.' },
+  { time: '65 Million Years Ago', event: 'Dinosaur Extinction', desc: 'An asteroid impact reshapes life on Earth, paving the way for mammals.' },
+  { time: '200,000 Years Ago', event: 'Modern Humans', desc: 'Homo sapiens appear in Africa, beginning our species\' remarkable journey.' },
+  { time: '1969', event: 'Moon Landing', desc: 'Apollo 11 — humanity takes its first steps on another world.' },
+  { time: 'Today', event: 'James Webb Era', desc: 'The most powerful space telescope ever built peers into the early universe.' },
+];
+---
+
+<section class="section timeline-section" aria-labelledby="timeline-heading">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-label">Cosmic History</span>
+      <h2 id="timeline-heading" class="section-title">Timeline of the Universe</h2>
+      <p class="section-subtitle">From the Big Bang to today — key milestones in cosmic evolution.</p>
+    </header>
+
+    <div class="timeline" role="list">
+      {timeline.map((item, i) => (
+        <div class="timeline-item" role="listitem" style={`--i: ${i}`}>
+          <div class="timeline-marker" aria-hidden="true">
+            <span class="marker-dot"></span>
+          </div>
+          <div class="timeline-content glass-card">
+            <time class="timeline-time">{item.time}</time>
+            <h3 class="timeline-event">{item.event}</h3>
+            <p class="timeline-desc">{item.desc}</p>
+          </div>
+        </div>
+      ))}
+    </div>
+
+    <div class="timeline-cta">
+      <a href="/science-tools/space-timeline" class="btn btn-secondary">Interactive Timeline Tool</a>
+    </div>
+  </div>
+</section>
+
+<style>
+  .timeline {
+    position: relative;
+    max-width: 800px;
+    margin: 0 auto;
+    padding-left: var(--space-2xl);
+  }
+
+  .timeline::before {
+    content: '';
+    position: absolute;
+    left: 11px;
+    top: 0;
+    bottom: 0;
+    width: 2px;
+    background: linear-gradient(180deg, var(--stellar), var(--aurora), var(--gold));
+  }
+
+  .timeline-item {
+    position: relative;
+    margin-bottom: var(--space-xl);
+    animation: slideIn 0.6s ease calc(var(--i) * 0.15s) forwards;
+    opacity: 0;
+  }
+
+  @keyframes slideIn {
+    from { opacity: 0; transform: translateX(-20px); }
+    to { opacity: 1; transform: translateX(0); }
+  }
+
+  .timeline-marker {
+    position: absolute;
+    left: calc(-1 * var(--space-2xl) + 4px);
+    top: var(--space-lg);
+  }
+
+  .marker-dot {
+    display: block;
+    width: 16px;
+    height: 16px;
+    background: var(--gold);
+    border-radius: 50%;
+    border: 3px solid var(--void);
+    box-shadow: 0 0 15px rgba(251, 191, 36, 0.5);
+  }
+
+  .timeline-time {
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--aurora);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    display: block;
+    margin-bottom: var(--space-sm);
+  }
+
+  .timeline-event {
+    font-size: 1.125rem;
+    margin-bottom: var(--space-sm);
+    color: var(--starlight);
+  }
+
+  .timeline-desc {
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+    margin: 0;
+    line-height: 1.6;
+  }
+
+  .timeline-cta {
+    text-align: center;
+    margin-top: var(--space-3xl);
+  }
+</style>

@@ -1,0 +1,178 @@
+---
+interface Props {
+  variant?: 'footer' | 'inline';
+}
+const { variant = 'inline' } = Astro.props;
+---
+
+<section class={`newsletter newsletter--${variant}`} aria-labelledby="newsletter-heading">
+  <div class="newsletter-inner">
+    <div class="newsletter-content">
+      <span class="newsletter-icon" aria-hidden="true">🌌</span>
+      <h2 id="newsletter-heading" class="newsletter-title">
+        {variant === 'footer' ? 'Join the Cosmic Discovery Newsletter' : 'Stay Curious'}
+      </h2>
+      <p class="newsletter-desc">
+        Weekly science discoveries, space missions, and educational insights delivered to your inbox.
+      </p>
+    </div>
+    <form class="newsletter-form" id="newsletter-form" novalidate>
+      <div class="form-group">
+        <label for="newsletter-email" class="sr-only">Email address</label>
+        <input
+          type="email"
+          id="newsletter-email"
+          name="email"
+          placeholder="your@email.com"
+          required
+          autocomplete="email"
+          aria-describedby="newsletter-status"
+        />
+        <button type="submit" class="btn btn-primary">Subscribe</button>
+      </div>
+      <p class="honeypot" aria-hidden="true">
+        <label for="newsletter-website">Website</label>
+        <input type="text" id="newsletter-website" name="website" tabindex="-1" autocomplete="off" />
+      </p>
+      <p id="newsletter-status" class="form-status" role="status" aria-live="polite"></p>
+      <p class="newsletter-privacy">
+        We respect your privacy. Unsubscribe anytime. See our <a href="/privacy-policy">Privacy Policy</a>.
+      </p>
+    </form>
+  </div>
+</section>
+
+<script>
+  const form = document.getElementById('newsletter-form') as HTMLFormElement;
+  const status = document.getElementById('newsletter-status');
+
+  form?.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const fd = new FormData(form);
+    const email = fd.get('email') as string;
+    const honeypot = fd.get('website') as string;
+
+    if (honeypot) return;
+
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      if (status) status.textContent = 'Please enter a valid email address.';
+      return;
+    }
+
+    if (status) status.textContent = 'Subscribing…';
+
+    try {
+      const res = await fetch('/api/newsletter.php', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ email }),
+      });
+      const data = await res.json();
+      if (status) {
+        status.textContent = data.success
+          ? 'Welcome aboard! Check your inbox to confirm.'
+          : data.message || 'Something went wrong. Please try again.';
+      }
+      if (data.success) form.reset();
+    } catch {
+      if (status) status.textContent = 'Connection error. Please try again later.';
+    }
+  });
+</script>
+
+<style>
+  .newsletter {
+    border-radius: var(--radius-lg);
+    overflow: hidden;
+  }
+
+  .newsletter--footer {
+    background: linear-gradient(135deg, rgba(45, 27, 105, 0.5), rgba(26, 16, 64, 0.8));
+    border: 1px solid var(--border);
+    padding: var(--space-2xl);
+    margin-bottom: var(--space-3xl);
+  }
+
+  .newsletter--inline {
+    background: var(--bg-card);
+    border: 1px solid var(--border);
+    padding: var(--space-2xl);
+  }
+
+  .newsletter-inner {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: var(--space-2xl);
+    align-items: center;
+  }
+
+  @media (max-width: 768px) {
+    .newsletter-inner { grid-template-columns: 1fr; }
+  }
+
+  .newsletter-icon {
+    font-size: 2rem;
+    display: block;
+    margin-bottom: var(--space-md);
+  }
+
+  .newsletter-title {
+    font-family: var(--font-display);
+    font-size: 1.5rem;
+    margin-bottom: var(--space-md);
+    background: linear-gradient(135deg, var(--starlight), var(--gold));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .newsletter-desc {
+    color: var(--text-secondary);
+    font-size: 0.9375rem;
+    margin: 0;
+  }
+
+  .form-group {
+    display: flex;
+    gap: var(--space-sm);
+  }
+
+  @media (max-width: 500px) {
+    .form-group { flex-direction: column; }
+  }
+
+  .newsletter-form input[type="email"] {
+    flex: 1;
+    padding: 0.75rem 1rem;
+    background: rgba(0, 0, 0, 0.3);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    color: var(--starlight);
+    font-size: 0.9375rem;
+  }
+
+  .newsletter-form input[type="email"]::placeholder {
+    color: var(--text-muted);
+  }
+
+  .honeypot {
+    position: absolute;
+    left: -9999px;
+    opacity: 0;
+    height: 0;
+    overflow: hidden;
+  }
+
+  .form-status {
+    margin-top: var(--space-sm);
+    font-size: 0.875rem;
+    color: var(--aurora);
+    min-height: 1.25rem;
+  }
+
+  .newsletter-privacy {
+    margin-top: var(--space-md);
+    font-size: 0.75rem;
+    color: var(--text-muted);
+  }
+</style>

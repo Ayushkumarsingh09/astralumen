@@ -1,0 +1,126 @@
+---
+const planets = [
+  { name: 'Mercury', emoji: '☿️', color: '#9ca3af', href: '/planets/mercury-explained', desc: 'Swift messenger of the Sun' },
+  { name: 'Venus', emoji: '♀️', color: '#f59e0b', href: '/planets/venus-the-hothouse-world', desc: 'Earth\'s blazing twin' },
+  { name: 'Earth', emoji: '🌍', color: '#3b82f6', href: '/articles/earth-the-blue-planet', desc: 'The oasis of life' },
+  { name: 'Mars', emoji: '♂️', color: '#ef4444', href: '/planets/mars-the-red-planet', desc: 'Humanity\'s next frontier' },
+  { name: 'Jupiter', emoji: '♃', color: '#d97706', href: '/planets/jupiter-gas-giant-king', desc: 'King of the planets' },
+  { name: 'Saturn', emoji: '♄', color: '#fbbf24', href: '/planets/saturn-rings-and-moons', desc: 'Jewel of the solar system' },
+  { name: 'Uranus', emoji: '♅', color: '#22d3ee', href: '/planets/uranus-the-tilted-giant', desc: 'The sideways ice giant' },
+  { name: 'Neptune', emoji: '♆', color: '#3b82f6', href: '/planets/neptune-deep-blue-giant', desc: 'Windiest world' },
+];
+---
+
+<section class="section solar-system" aria-labelledby="solar-heading">
+  <div class="container">
+    <header class="section-header">
+      <span class="section-label">Our Cosmic Neighborhood</span>
+      <h2 id="solar-heading" class="section-title">Explore the Solar System</h2>
+      <p class="section-subtitle">Journey through the planets, moons, and mysteries of our celestial home.</p>
+    </header>
+
+    <div class="planets-orbit" aria-hidden="true">
+      <div class="sun"></div>
+    </div>
+
+    <div class="planets-grid">
+      {planets.map((planet, i) => (
+        <a href={planet.href} class="planet-card glass-card" style={`--planet-color: ${planet.color}; --delay: ${i * 0.1}s`}>
+          <span class="planet-emoji">{planet.emoji}</span>
+          <h3 class="planet-name">{planet.name}</h3>
+          <p class="planet-desc">{planet.desc}</p>
+          <span class="planet-link">Explore →</span>
+        </a>
+      ))}
+    </div>
+  </div>
+</section>
+
+<style>
+  .solar-system {
+    position: relative;
+    overflow: hidden;
+  }
+
+  .planets-orbit {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%);
+    width: 600px;
+    height: 600px;
+    pointer-events: none;
+    opacity: 0.15;
+  }
+
+  .sun {
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: 80px;
+    height: 80px;
+    margin: -40px;
+    background: radial-gradient(circle, #fbbf24, #f59e0b, #d97706);
+    border-radius: 50%;
+    box-shadow: 0 0 100px rgba(251, 191, 36, 0.5);
+    animation: pulse 4s ease-in-out infinite;
+  }
+
+  @keyframes pulse {
+    0%, 100% { transform: scale(1); }
+    50% { transform: scale(1.05); }
+  }
+
+  .planets-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: var(--space-lg);
+    position: relative;
+    z-index: 1;
+  }
+
+  .planet-card {
+    text-align: center;
+    text-decoration: none;
+    color: inherit;
+    animation: fadeIn 0.6s ease var(--delay) forwards;
+    opacity: 0;
+    border-color: color-mix(in srgb, var(--planet-color) 30%, transparent);
+  }
+
+  @keyframes fadeIn {
+    to { opacity: 1; }
+  }
+
+  .planet-card:hover {
+    border-color: var(--planet-color);
+    box-shadow: 0 0 30px color-mix(in srgb, var(--planet-color) 30%, transparent);
+  }
+
+  .planet-emoji {
+    font-size: 2.5rem;
+    display: block;
+    margin-bottom: var(--space-md);
+  }
+
+  .planet-name {
+    font-family: var(--font-display);
+    font-size: 1.125rem;
+    color: var(--planet-color);
+    margin-bottom: var(--space-sm);
+  }
+
+  .planet-desc {
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    margin-bottom: var(--space-md);
+  }
+
+  .planet-link {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--aurora);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+  }
+</style>

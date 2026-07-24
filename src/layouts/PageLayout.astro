@@ -1,0 +1,42 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import { breadcrumbSchema } from '@/utils/seo';
+
+interface Props {
+  title: string;
+  description: string;
+  breadcrumbs?: { label: string; href?: string }[];
+  image?: string;
+  noindex?: boolean;
+}
+
+const { title, description, breadcrumbs = [], image, noindex } = Astro.props;
+
+const schemaItems = [
+  { name: 'Home', url: '/' },
+  ...breadcrumbs.map((b) => ({ name: b.label, url: b.href })),
+];
+---
+
+<BaseLayout
+  title={title}
+  description={description}
+  image={image}
+  noindex={noindex}
+  schema={breadcrumbSchema(schemaItems)}
+>
+  {breadcrumbs.length > 0 && (
+    <div class="container breadcrumb-wrap">
+      <Breadcrumbs items={breadcrumbs} />
+    </div>
+  )}
+  <slot />
+</BaseLayout>
+
+<style>
+  .breadcrumb-wrap {
+    padding-top: var(--space-md);
+    padding-bottom: var(--space-sm);
+  }
+</style>

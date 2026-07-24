@@ -1,0 +1,132 @@
+<canvas id="starfield-canvas" class="starfield" aria-hidden="true"></canvas>
+
+<script>
+  const canvas = document.getElementById('starfield-canvas') as HTMLCanvasElement;
+  if (canvas) {
+    const ctx = canvas.getContext('2d');
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    let width = 0;
+    let height = 0;
+    let stars: { x: number; y: number; z: number; size: number; opacity: number; twinkleSpeed: number; twinkleOffset: number }[] = [];
+    let shootingStars: { x: number; y: number; len: number; speed: number; opacity: number; angle: number }[] = [];
+    let animationId: number;
+
+    const STAR_COUNT = prefersReducedMotion ? 80 : 200;
+
+    function resize() {
+      width = canvas.width = window.innerWidth;
+      height = canvas.height = window.innerHeight;
+      initStars();
+    }
+
+    function initStars() {
+      stars = Array.from({ length: STAR_COUNT }, () => ({
+        x: Math.random() * width,
+        y: Math.random() * height,
+        z: Math.random(),
+        size: Math.random() * 2 + 0.5,
+        opacity: Math.random() * 0.8 + 0.2,
+        twinkleSpeed: Math.random() * 0.02 + 0.005,
+        twinkleOffset: Math.random() * Math.PI * 2,
+      }));
+    }
+
+    function spawnShootingStar() {
+      if (prefersReducedMotion || Math.random() > 0.003) return;
+      shootingStars.push({
+        x: Math.random() * width,
+        y: Math.random() * height * 0.5,
+        len: Math.random() * 80 + 40,
+        speed: Math.random() * 8 + 6,
+        opacity: 1,
+        angle: Math.PI / 4 + (Math.random() - 0.5) * 0.3,
+      });
+    }
+
+    let time = 0;
+
+    function animate() {
+      if (!ctx) return;
+      ctx.clearRect(0, 0, width, height);
+      time += 0.016;
+
+      stars.forEach((star) => {
+        const twinkle = prefersReducedMotion
+          ? star.opacity
+          : star.opacity * (0.6 + 0.4 * Math.sin(time * star.twinkleSpeed * 60 + star.twinkleOffset));
+
+        if (!prefersReducedMotion) {
+          star.y -= star.z * 0.05;
+          if (star.y < 0) {
+            star.y = height;
+            star.x = Math.random() * width;
+          }
+        }
+
+        ctx.beginPath();
+        ctx.arc(star.x, star.y, star.size * (0.5 + star.z * 0.5), 0, Math.PI * 2);
+        ctx.fillStyle = `rgba(226, 232, 240, ${twinkle * (0.3 + star.z * 0.7)})`;
+        ctx.fill();
+      });
+
+      spawnShootingStar();
+      shootingStars = shootingStars.filter((ss) => {
+        ss.x += Math.cos(ss.angle) * ss.speed;
+        ss.y += Math.sin(ss.angle) * ss.speed;
+        ss.opacity -= 0.015;
+
+        if (ss.opacity <= 0) return false;
+
+        const gradient = ctx.createLinearGradient(
+          ss.x, ss.y,
+          ss.x - Math.cos(ss.angle) * ss.len,
+          ss.y - Math.sin(ss.angle) * ss.len
+        );
+        gradient.addColorStop(0, `rgba(255, 255, 255, ${ss.opacity})`);
+        gradient.addColorStop(1, 'rgba(255, 255, 255, 0)');
+
+        ctx.beginPath();
+        ctx.moveTo(ss.x, ss.y);
+        ctx.lineTo(ss.x - Math.cos(ss.angle) * ss.len, ss.y - Math.sin(ss.angle) * ss.len);
+        ctx.strokeStyle = gradient;
+        ctx.lineWidth = 2;
+        ctx.stroke();
+        return true;
+      });
+
+      animationId = requestAnimationFrame(animate);
+    }
+
+    resize();
+    if (!prefersReducedMotion) {
+      animate();
+    } else {
+      if (ctx) {
+        stars.forEach((star) => {
+          ctx.beginPath();
+          ctx.arc(star.x, star.y, star.size, 0, Math.PI * 2);
+          ctx.fillStyle = `rgba(226, 232, 240, ${star.opacity * 0.5})`;
+          ctx.fill();
+        });
+      }
+    }
+
+    window.addEventListener('resize', resize);
+
+    document.addEventListener('astro:before-swap', () => {
+      cancelAnimationFrame(animationId);
+      window.removeEventListener('resize', resize);
+    });
+  }
+</script>
+
+<style>
+  .starfield {
+    position: fixed;
+    inset: 0;
+    z-index: -1;
+    pointer-events: none;
+    opacity: 0.7;
+  }
+</style>

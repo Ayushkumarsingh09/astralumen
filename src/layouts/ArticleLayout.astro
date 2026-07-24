@@ -1,0 +1,267 @@
+---
+import BaseLayout from '@layouts/BaseLayout.astro';
+import Breadcrumbs from '@components/Breadcrumbs.astro';
+import AuthorCard from '@components/AuthorCard.astro';
+import TableOfContents from '@components/TableOfContents.astro';
+import ScienceFacts from '@components/ScienceFacts.astro';
+import FAQ from '@components/FAQ.astro';
+import References from '@components/References.astro';
+import RelatedArticles from '@components/RelatedArticles.astro';
+import { getAuthor } from '@/data/authors';
+import { formatDate } from '@/utils/helpers';
+import { articleSchema, faqSchema, breadcrumbSchema } from '@/utils/seo';
+import { SITE } from '@/config/site';
+import { CATEGORY_META, type Category } from '@/config/site';
+
+interface Props {
+  title: string;
+  seoTitle: string;
+  description: string;
+  category: string;
+  author: string;
+  reviewer?: string;
+  featuredImage: string;
+  imageAttribution: string;
+  publishedDate: string;
+  updatedDate: string;
+  readingTime: number;
+  scienceFacts: string[];
+  faqs: { question: string; answer: string }[];
+  references: { title: string; url: string }[];
+  relatedArticles?: string[];
+  headings: { depth: number; slug: string; text: string }[];
+}
+
+const {
+  title,
+  seoTitle,
+  description,
+  category,
+  author: authorId,
+  reviewer,
+  featuredImage,
+  imageAttribution,
+  publishedDate,
+  updatedDate,
+  readingTime,
+  scienceFacts,
+  faqs,
+  references,
+  relatedArticles = [],
+  headings,
+} = Astro.props;
+
+const author = getAuthor(authorId);
+const reviewerData = reviewer ? getAuthor(reviewer) : undefined;
+const catMeta = CATEGORY_META[category as Category];
+const articleUrl = Astro.url.href;
+
+const schemas = [
+  articleSchema({
+    title: seoTitle,
+    description,
+    image: featuredImage,
+    publishedDate,
+    updatedDate,
+    author: author?.name || 'AstraLumen Editorial',
+    url: articleUrl,
+  }),
+  faqSchema(faqs),
+  breadcrumbSchema([
+    { name: 'Home', url: '/' },
+    { name: catMeta?.title || category, url: `/${category}` },
+    { name: title },
+  ]),
+];
+---
+
+<BaseLayout
+  title={seoTitle}
+  description={description}
+  image={featuredImage}
+  type="article"
+  publishedDate={publishedDate}
+  updatedDate={updatedDate}
+  author={author?.name}
+  schema={schemas}
+>
+  <article class="article">
+    <header class="article-header">
+      <div class="container">
+        <Breadcrumbs
+          items={[
+            { label: catMeta?.title || category, href: `/${category}` },
+            { label: title },
+          ]}
+        />
+        <div class="article-meta">
+          <a href={`/${category}`} class="category-badge">
+            {catMeta?.icon} {catMeta?.title || category}
+          </a>
+          <span class="meta-item">{readingTime} min read</span>
+          <span class="meta-item">Updated {formatDate(updatedDate)}</span>
+        </div>
+        <h1 class="article-title">{title}</h1>
+        <p class="article-description">{description}</p>
+        {author && (
+          <div class="author-line">
+            <span>By <strong>{author.name}</strong></span>
+            {reviewerData && (
+              <span class="reviewed"> · Scientifically reviewed by {reviewerData.name}</span>
+            )}
+          </div>
+        )}
+      </div>
+      <figure class="featured-image">
+        <img
+          src={featuredImage}
+          alt={title}
+          width="1200"
+          height="630"
+          loading="eager"
+          decoding="async"
+          onerror="this.onerror=null;this.src='/images/og-default.svg'"
+        />
+        <figcaption>{imageAttribution}</figcaption>
+      </figure>
+    </header>
+
+    <div class="article-body container">
+      <aside class="article-sidebar">
+        <TableOfContents headings={headings} />
+      </aside>
+      <div class="article-content prose">
+        <slot />
+      </div>
+    </div>
+
+    <div class="container article-extras">
+      <ScienceFacts facts={scienceFacts} />
+      <FAQ faqs={faqs} />
+      <References refs={references} />
+      {author && <AuthorCard author={author} />}
+      {relatedArticles.length > 0 && (
+        <RelatedArticles slugs={relatedArticles} />
+      )}
+    </div>
+  </article>
+</BaseLayout>
+
+<style>
+  .article-header {
+    padding: var(--space-xl) 0 var(--space-2xl);
+  }
+
+  .article-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: var(--space-md);
+    align-items: center;
+    margin: var(--space-lg) 0;
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .category-badge {
+    display: inline-flex;
+    align-items: center;
+    gap: var(--space-xs);
+    padding: 0.25rem 0.75rem;
+    background: rgba(124, 58, 237, 0.15);
+    border: 1px solid var(--border);
+    border-radius: var(--radius-full);
+    font-family: var(--font-display);
+    font-size: 0.75rem;
+    font-weight: 600;
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    color: var(--stellar-light);
+  }
+
+  .category-badge:hover {
+    color: var(--gold-light);
+  }
+
+  .article-title {
+    font-size: clamp(1.75rem, 4vw, 2.75rem);
+    margin-bottom: var(--space-lg);
+    background: linear-gradient(135deg, var(--starlight), var(--aurora-light));
+    -webkit-background-clip: text;
+    -webkit-text-fill-color: transparent;
+    background-clip: text;
+  }
+
+  .article-description {
+    font-size: 1.25rem;
+    color: var(--text-secondary);
+    max-width: 800px;
+    line-height: 1.6;
+  }
+
+  .author-line {
+    margin-top: var(--space-lg);
+    font-size: 0.9375rem;
+    color: var(--text-secondary);
+  }
+
+  .reviewed {
+    color: var(--aurora);
+  }
+
+  .featured-image {
+    margin-top: var(--space-2xl);
+    position: relative;
+    overflow: hidden;
+    border-radius: var(--radius-lg);
+    max-width: var(--max-width);
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 var(--space-lg);
+  }
+
+  .featured-image img {
+    width: 100%;
+    height: auto;
+    max-height: 500px;
+    object-fit: cover;
+    border-radius: var(--radius-lg);
+    border: 1px solid var(--border);
+  }
+
+  .featured-image figcaption {
+    margin-top: var(--space-sm);
+    font-size: 0.8125rem;
+    color: var(--text-muted);
+    text-align: center;
+  }
+
+  .article-body {
+    display: grid;
+    grid-template-columns: 240px 1fr;
+    gap: var(--space-3xl);
+    padding: var(--space-3xl) var(--space-lg);
+    align-items: start;
+  }
+
+  .article-sidebar {
+    position: sticky;
+    top: calc(var(--header-height) + var(--space-lg));
+  }
+
+  .article-extras {
+    padding-bottom: var(--space-4xl);
+    display: flex;
+    flex-direction: column;
+    gap: var(--space-3xl);
+  }
+
+  @media (max-width: 1024px) {
+    .article-body {
+      grid-template-columns: 1fr;
+    }
+    .article-sidebar {
+      position: static;
+      order: -1;
+    }
+  }
+</style>
