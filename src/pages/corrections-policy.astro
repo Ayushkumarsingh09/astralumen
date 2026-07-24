@@ -1,0 +1,169 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { SITE } from '@/config/site';
+
+const lastUpdated = 'June 16, 2025';
+---
+
+<PageLayout
+  title="Corrections Policy"
+  description="How to report errors on AstraLumen and how we investigate, correct, and acknowledge factual mistakes in our science content."
+  breadcrumbs={[{ label: 'Corrections Policy' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="hero-icon" aria-hidden="true">✏️</span>
+      <h1>Corrections Policy</h1>
+      <p class="hero-lead">We are committed to accuracy. When we get something wrong, we fix it.</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose legal-prose">
+      <p>
+        {SITE.name} strives for the highest standards of scientific accuracy. Despite our
+        rigorous editorial and review process, errors can occur. When they do, we correct
+        them promptly and transparently. This policy explains how to report errors and
+        how we handle corrections.
+      </p>
+
+      <h2>What Qualifies for Correction</h2>
+      <p>We correct verifiable factual errors, including but not limited to:</p>
+      <ul>
+        <li>Incorrect scientific data, measurements, or statistics</li>
+        <li>Misattributed quotes, discoveries, or historical events</li>
+        <li>Outdated information that no longer reflects scientific consensus</li>
+        <li>Broken or incorrect links to primary sources</li>
+        <li>Errors in calculations within our science tools</li>
+        <li>Misspelled scientific terms, species names, or proper nouns</li>
+        <li>Misleading or ambiguous phrasing that could cause misunderstanding</li>
+      </ul>
+
+      <h2>What We Typically Do Not Correct</h2>
+      <ul>
+        <li>Differences of scientific opinion where legitimate debate exists among experts</li>
+        <li>Stylistic preferences or editorial tone (unless clarity is affected)</li>
+        <li>Requests to remove accurate but uncomfortable information</li>
+        <li>Subjective interpretations clearly presented as such</li>
+      </ul>
+
+      <h2>How to Report an Error</h2>
+      <p>If you believe you have found an error, please contact us with the following information:</p>
+      <ol>
+        <li><strong>Article URL</strong> — the direct link to the page containing the error</li>
+        <li><strong>Description</strong> — a clear explanation of what is incorrect</li>
+        <li><strong>Correct information</strong> — what the accurate information should be</li>
+        <li><strong>Source</strong> — a link to a credible source supporting the correction (peer-reviewed paper, official agency, etc.)</li>
+        <li><strong>Your contact information</strong> (optional) — so we can follow up if needed</li>
+      </ol>
+
+      <h3>Report via Contact Form</h3>
+      <p>
+        Use our <a href="/contact">contact form</a> and select "Report a Correction" as the subject.
+        This is the fastest way to reach our editorial team.
+      </p>
+
+      <h3>Report via Email</h3>
+      <p>
+        Send correction requests to <a href={`mailto:${SITE.email}`}>{SITE.email}</a> with
+        "Correction Request" in the subject line.
+      </p>
+
+      <h2>Our Correction Process</h2>
+      <ol>
+        <li><strong>Acknowledgment</strong> — We aim to acknowledge receipt within 2 business days</li>
+        <li><strong>Investigation</strong> — Our editorial team and subject-matter experts verify the reported error against primary sources</li>
+        <li><strong>Correction</strong> — If confirmed, we update the article promptly</li>
+        <li><strong>Notification</strong> — For significant corrections, we may add a correction note at the top or bottom of the article</li>
+        <li><strong>Follow-up</strong> — If you provided contact information, we will notify you of the outcome</li>
+      </ol>
+
+      <h2>Types of Corrections</h2>
+      <h3>Minor Corrections</h3>
+      <p>
+        Typos, broken links, and small factual errors are corrected silently. The article's
+        "last updated" date is revised to reflect the change.
+      </p>
+
+      <h3>Major Corrections</h3>
+      <p>
+        Significant factual errors that could mislead readers receive a visible correction note.
+        The note includes the date of correction and a brief description of what was changed.
+        Example:
+      </p>
+      <blockquote>
+        <strong>Correction (June 16, 2025):</strong> An earlier version of this article
+        stated that Jupiter has 95 moons. The correct count, per NASA's latest tally, is 97.
+        The article has been updated accordingly.
+      </blockquote>
+
+      <h3>Retractions</h3>
+      <p>
+        In rare cases where an article contains fundamental errors that cannot be adequately
+        corrected through revision, we may retract the article and redirect readers to
+        accurate alternative resources.
+      </p>
+
+      <h2>Update vs. Correction</h2>
+      <p>
+        Not every content change is a correction. We regularly update articles to reflect
+        new scientific discoveries, mission results, and expanded coverage. Routine updates
+        that add new information (without fixing errors) are noted with an updated date but
+        do not receive a correction notice.
+      </p>
+
+      <h2>Our Commitment</h2>
+      <p>
+        We view corrections not as failures but as essential to maintaining trust with our
+        readers. Science is a self-correcting process, and so is science journalism. Thank you
+        for helping us keep {SITE.name} accurate and reliable.
+      </p>
+
+      <p class="policy-footer">
+        <em>Last updated: {lastUpdated}</em>
+      </p>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-lead {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 600px;
+    margin: var(--space-md) auto 0;
+  }
+
+  .legal-prose {
+    padding-bottom: var(--space-4xl);
+  }
+
+  .legal-prose ul,
+  .legal-prose ol {
+    color: var(--text-secondary);
+  }
+
+  .legal-prose li {
+    margin-bottom: var(--space-sm);
+    font-size: 1.0625rem;
+  }
+
+  .policy-footer {
+    margin-top: var(--space-3xl);
+    padding-top: var(--space-xl);
+    border-top: 1px solid var(--border);
+    color: var(--text-muted);
+    font-size: 0.875rem;
+  }
+</style>

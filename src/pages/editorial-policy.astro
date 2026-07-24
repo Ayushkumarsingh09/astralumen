@@ -1,0 +1,152 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { SITE } from '@/config/site';
+
+const lastUpdated = 'June 16, 2025';
+---
+
+<PageLayout
+  title="Editorial Policy — AstraLumen Science Review Standards"
+  description="Learn how AstraLumen ensures scientific accuracy through expert review, fact-checking, sourcing standards, and editorial oversight."
+  breadcrumbs={[{ label: 'Editorial Policy' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Trust & Accuracy</span>
+      <h1>Editorial Policy</h1>
+      <p class="hero-lead">
+        How we research, write, review, and maintain scientifically accurate educational content.
+      </p>
+      <p class="hero-meta">Last updated: {lastUpdated}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <p>
+        At {SITE.name}, scientific accuracy is our highest priority. Every article published on
+        our platform goes through a rigorous editorial process designed to ensure that learners,
+        educators, and curious readers receive trustworthy, up-to-date science education.
+      </p>
+
+      <h2>Our Editorial Principles</h2>
+      <ul>
+        <li><strong>Accuracy first</strong> — Facts must be verifiable against peer-reviewed literature, government agencies, or established scientific institutions.</li>
+        <li><strong>Clarity without oversimplification</strong> — We make complex science accessible without sacrificing precision.</li>
+        <li><strong>Transparency</strong> — We cite sources, disclose author credentials, and identify when scientific consensus is evolving.</li>
+        <li><strong>Independence</strong> — Editorial decisions are not influenced by advertisers or sponsors.</li>
+        <li><strong>Inclusivity</strong> — Science education should be welcoming to learners of all backgrounds and ages.</li>
+      </ul>
+
+      <h2>Content Creation Process</h2>
+      <h3>1. Topic Selection</h3>
+      <p>
+        Topics are chosen based on educational value, reader interest, curriculum relevance, and
+        alignment with current scientific understanding. We prioritize evergreen content that
+        remains accurate and useful over time.
+      </p>
+
+      <h3>2. Research & Writing</h3>
+      <p>
+        Articles are researched using primary sources including peer-reviewed journals (via PubMed,
+        arXiv, NASA, NOAA, USGS, and institutional repositories), government science agencies,
+        and textbooks from accredited institutions. Writers hold advanced degrees in relevant
+        scientific fields or have equivalent professional experience.
+      </p>
+
+      <h3>3. Expert Review</h3>
+      <p>
+        Every article is reviewed by at least one subject-matter expert from our
+        <a href="/authors">editorial team</a> before publication. Reviewers verify:
+      </p>
+      <ul>
+        <li>Factual accuracy of scientific claims</li>
+        <li>Appropriate use of terminology and units</li>
+        <li>Balanced presentation of established science vs. emerging research</li>
+        <li>Age-appropriate language and explanations</li>
+        <li>Completeness of references and citations</li>
+      </ul>
+
+      <h3>4. Fact-Checking</h3>
+      <p>
+        A dedicated fact-checking step verifies specific claims, statistics, dates, and names
+        against primary sources. Numerical data (distances, temperatures, masses, etc.) is
+        cross-referenced with authoritative databases such as NASA Planetary Fact Sheets and
+        NIST reference data.
+      </p>
+
+      <h3>5. Publication & Updates</h3>
+      <p>
+        Published articles display the author's name, reviewer credentials, publication date, and
+        last updated date. We review and update content when significant new research emerges or
+        when readers report errors through our <a href="/corrections-policy">corrections policy</a>.
+      </p>
+
+      <h2>Sourcing Standards</h2>
+      <p>We prioritize sources in the following order:</p>
+      <ol>
+        <li>Peer-reviewed scientific journals and conference proceedings</li>
+        <li>Government science agencies (NASA, NOAA, NIH, EPA, USGS, ESA, etc.)</li>
+        <li>University and research institution publications</li>
+        <li>Established science textbooks and encyclopedias</li>
+        <li>Reputable science journalism (for context, not as primary evidence)</li>
+      </ol>
+      <p>
+        We avoid citing unverified blogs, social media posts, or sources with known conflicts of
+        interest as primary references.
+      </p>
+
+      <h2>Handling Evolving Science</h2>
+      <p>
+        Science advances continuously. When a topic is actively debated or newly discovered, we
+        clearly indicate the current state of research and distinguish between established
+        consensus and emerging findings. Articles on rapidly evolving topics (such as climate
+        science or exoplanet research) are reviewed more frequently.
+      </p>
+
+      <h2>Corrections</h2>
+      <p>
+        When errors are identified, we correct them promptly and transparently. Minor corrections
+        are noted with an updated date. Significant corrections receive an editor's note at the
+        top of the article. See our full <a href="/corrections-policy">Corrections Policy</a>.
+      </p>
+
+      <h2>Advertising & Editorial Independence</h2>
+      <p>
+        {SITE.name} may display advertisements to support free access to our content. Advertisers
+        have no influence over editorial content, topic selection, or review outcomes. Sponsored
+        content, if ever published, will be clearly labeled.
+      </p>
+
+      <h2>Contact the Editorial Team</h2>
+      <p>
+        Questions about our editorial standards? Reach out at
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or visit our
+        <a href="/contact">contact page</a>.
+      </p>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-lead {
+    font-size: 1.125rem;
+    color: var(--text-secondary);
+    max-width: 640px;
+    margin: var(--space-lg) auto var(--space-sm);
+  }
+
+  .hero-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+  }
+
+  .section {
+    padding-bottom: var(--space-4xl);
+  }
+</style>

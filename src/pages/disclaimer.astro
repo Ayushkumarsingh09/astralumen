@@ -1,0 +1,149 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { SITE } from '@/config/site';
+
+const lastUpdated = 'June 16, 2025';
+---
+
+<PageLayout
+  title="Disclaimer"
+  description="Important disclaimers about the educational nature of AstraLumen content. Our science articles and tools are for learning, not professional advice."
+  breadcrumbs={[{ label: 'Disclaimer' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="hero-icon" aria-hidden="true">⚠️</span>
+      <h1>Disclaimer</h1>
+      <p class="hero-meta">Last updated: {lastUpdated}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose legal-prose">
+      <p>
+        Please read this disclaimer carefully before using {SITE.name} ({SITE.url}).
+        By accessing and using this website, you acknowledge and agree to the terms below.
+      </p>
+
+      <h2>Educational Purpose Only</h2>
+      <p>
+        All content published on {SITE.name} — including articles, guides, science facts,
+        interactive tools, calculators, experiments, and downloadable resources — is provided
+        strictly for <strong>general informational and educational purposes</strong>. Nothing
+        on this Site constitutes professional, medical, legal, engineering, financial, or
+        any other form of specialized advice.
+      </p>
+
+      <h2>Not a Substitute for Professional Advice</h2>
+      <p>
+        The information on this Site should not be used as a substitute for consultation
+        with qualified professionals. Always seek the advice of a physician, licensed
+        healthcare provider, or other qualified professional with any questions regarding
+        a medical condition, health decisions, or treatment. Never disregard professional
+        medical advice or delay seeking it because of something you read on {SITE.name}.
+      </p>
+
+      <h2>Scientific Accuracy &amp; Currency</h2>
+      <p>
+        While we make every effort to ensure our content is accurate, current, and aligned
+        with scientific consensus, science is an evolving field. Information may become
+        outdated as new research emerges. We update articles regularly but cannot guarantee
+        that all content reflects the very latest discoveries at all times.
+      </p>
+      <p>
+        We encourage readers to verify important information using primary sources and
+        consult our <a href="/editorial-policy">Editorial Policy</a> and cited references
+        at the end of each article.
+      </p>
+
+      <h2>Interactive Tools &amp; Calculators</h2>
+      <p>
+        Our science tools — including planet weight calculators, light-year converters, and
+        other interactive features — are designed for educational exploration. Results are
+        approximations based on published scientific constants and simplified models. They
+        should not be used for engineering calculations, navigation, medical dosing, or any
+        purpose requiring precision beyond educational demonstration.
+      </p>
+
+      <h2>Experiments &amp; Hands-On Activities</h2>
+      <p>
+        Any experiments or hands-on activities described on this Site should be conducted
+        under appropriate adult supervision, especially by minors. {SITE.name} is not
+        responsible for injuries, property damage, or other harm resulting from the
+        performance of experiments or activities described on the Site. Always follow
+        safety guidelines and local regulations.
+      </p>
+
+      <h2>External Links</h2>
+      <p>
+        Our articles may contain links to external websites for additional reading and
+        reference. These links are provided for convenience and do not imply endorsement.
+        We have no control over the content, accuracy, or privacy practices of third-party
+        sites and accept no responsibility for them.
+      </p>
+
+      <h2>Advertising</h2>
+      <p>
+        {SITE.name} may display advertisements through third-party services such as Google
+        AdSense. The appearance of advertisements does not constitute an endorsement of
+        advertised products or services. We are not responsible for the claims made in
+        third-party advertisements.
+      </p>
+
+      <h2>No Warranties</h2>
+      <p>
+        THE SITE AND ALL CONTENT ARE PROVIDED "AS IS" WITHOUT WARRANTY OF ANY KIND, EXPRESS
+        OR IMPLIED. WE DISCLAIM ALL WARRANTIES, INCLUDING MERCHANTABILITY, FITNESS FOR A
+        PARTICULAR PURPOSE, AND NON-INFRINGEMENT. WE DO NOT WARRANT THAT THE SITE WILL BE
+        UNINTERRUPTED, SECURE, OR ERROR-FREE.
+      </p>
+
+      <h2>Limitation of Liability</h2>
+      <p>
+        TO THE FULLEST EXTENT PERMITTED BY LAW, {SITE.name.toUpperCase()}, ITS AUTHORS,
+        EDITORS, REVIEWERS, AND AFFILIATES SHALL NOT BE LIABLE FOR ANY DIRECT, INDIRECT,
+        INCIDENTAL, CONSEQUENTIAL, OR SPECIAL DAMAGES ARISING FROM YOUR USE OF OR RELIANCE
+        ON ANY CONTENT ON THIS SITE.
+      </p>
+
+      <h2>Contact</h2>
+      <p>
+        Questions about this disclaimer? Reach us at
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or through our
+        <a href="/contact">contact page</a>.
+      </p>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-icon {
+    font-size: 4rem;
+    display: block;
+    margin-bottom: var(--space-lg);
+  }
+
+  .hero-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: var(--space-md);
+  }
+
+  .legal-prose {
+    padding-bottom: var(--space-4xl);
+  }
+
+  .legal-prose ul {
+    color: var(--text-secondary);
+  }
+
+  .legal-prose li {
+    margin-bottom: var(--space-sm);
+    font-size: 1.0625rem;
+  }
+</style>

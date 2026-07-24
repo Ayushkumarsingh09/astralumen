@@ -1,0 +1,151 @@
+---
+import PageLayout from '@layouts/PageLayout.astro';
+import { SITE } from '@/config/site';
+
+const lastUpdated = 'June 16, 2025';
+---
+
+<PageLayout
+  title="Terms of Service — AstraLumen"
+  description="Read the terms and conditions governing your use of AstraLumen's science education website, tools, and content."
+  breadcrumbs={[{ label: 'Terms of Service' }]}
+>
+  <section class="page-hero">
+    <div class="container">
+      <span class="section-label">Legal</span>
+      <h1>Terms of Service</h1>
+      <p class="hero-meta">Last updated: {lastUpdated}</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <div class="container prose">
+      <p>
+        Welcome to {SITE.name}. These Terms of Service ("Terms") govern your access to and use
+        of {SITE.url} (the "Site") and all content, tools, and services provided by {SITE.name}.
+        By accessing or using the Site, you agree to be bound by these Terms.
+      </p>
+
+      <h2>1. Acceptance of Terms</h2>
+      <p>
+        By using the Site, you confirm that you are at least 13 years of age (or have parental
+        consent) and agree to these Terms and our <a href="/privacy-policy">Privacy Policy</a>.
+        If you do not agree, please do not use the Site.
+      </p>
+
+      <h2>2. Educational Purpose</h2>
+      <p>
+        {SITE.name} provides science education content for informational and educational purposes
+        only. Our content is not intended as professional medical, legal, engineering, or
+        scientific advice. See our <a href="/disclaimer">Disclaimer</a> for more information.
+      </p>
+
+      <h2>3. Intellectual Property</h2>
+      <p>
+        All content on the Site — including text, graphics, logos, images, interactive tools,
+        and software — is the property of {SITE.name} or its content licensors and is protected
+        by copyright, trademark, and other intellectual property laws.
+      </p>
+      <p>You may:</p>
+      <ul>
+        <li>View and read content for personal, non-commercial educational use</li>
+        <li>Share links to our articles on social media or in educational settings</li>
+        <li>Quote brief excerpts with proper attribution and a link to the original article</li>
+      </ul>
+      <p>You may not:</p>
+      <ul>
+        <li>Reproduce, distribute, or republish substantial portions of our content without written permission</li>
+        <li>Use our content for commercial purposes without authorization</li>
+        <li>Remove copyright notices or attributions from our materials</li>
+        <li>Scrape, crawl, or systematically download Site content using automated tools</li>
+      </ul>
+
+      <h2>4. User Conduct</h2>
+      <p>When using the Site, you agree not to:</p>
+      <ul>
+        <li>Submit false, misleading, or harmful information through our forms</li>
+        <li>Attempt to gain unauthorized access to our systems or data</li>
+        <li>Interfere with the proper functioning of the Site</li>
+        <li>Use the Site for any unlawful purpose</li>
+        <li>Harass, abuse, or harm other users or our team</li>
+      </ul>
+
+      <h2>5. Third-Party Links</h2>
+      <p>
+        The Site may contain links to third-party websites, including scientific journals,
+        government agencies, and educational resources. We are not responsible for the content,
+        privacy practices, or availability of these external sites.
+      </p>
+
+      <h2>6. Interactive Tools</h2>
+      <p>
+        Our science calculators and interactive tools are provided for educational demonstration.
+        Results are approximations and should not be used for safety-critical, medical, or
+        engineering decisions without professional verification.
+      </p>
+
+      <h2>7. Disclaimer of Warranties</h2>
+      <p>
+        THE SITE AND ALL CONTENT ARE PROVIDED "AS IS" AND "AS AVAILABLE" WITHOUT WARRANTIES OF
+        ANY KIND, EXPRESS OR IMPLIED. WE DO NOT WARRANT THAT THE SITE WILL BE UNINTERRUPTED,
+        ERROR-FREE, OR FREE OF VIRUSES OR OTHER HARMFUL COMPONENTS.
+      </p>
+
+      <h2>8. Limitation of Liability</h2>
+      <p>
+        TO THE FULLEST EXTENT PERMITTED BY LAW, {SITE.name.toUpperCase()} AND ITS OFFICERS,
+        DIRECTORS, EMPLOYEES, AND CONTRIBUTORS SHALL NOT BE LIABLE FOR ANY INDIRECT, INCIDENTAL,
+        SPECIAL, CONSEQUENTIAL, OR PUNITIVE DAMAGES ARISING FROM YOUR USE OF THE SITE.
+      </p>
+
+      <h2>9. Indemnification</h2>
+      <p>
+        You agree to indemnify and hold harmless {SITE.name} from any claims, damages, or
+        expenses arising from your violation of these Terms or misuse of the Site.
+      </p>
+
+      <h2>10. Modifications</h2>
+      <p>
+        We reserve the right to modify these Terms at any time. Changes will be posted on this
+        page with an updated date. Your continued use of the Site after changes constitutes
+        acceptance of the revised Terms.
+      </p>
+
+      <h2>11. Termination</h2>
+      <p>
+        We may suspend or terminate your access to the Site at any time, without notice, for
+        conduct that we believe violates these Terms or is harmful to other users or the Site.
+      </p>
+
+      <h2>12. Governing Law</h2>
+      <p>
+        These Terms shall be governed by and construed in accordance with the laws of the
+        United States, without regard to conflict of law principles.
+      </p>
+
+      <h2>13. Contact</h2>
+      <p>
+        Questions about these Terms? Contact us at
+        <a href={`mailto:${SITE.email}`}>{SITE.email}</a> or through our
+        <a href="/contact">contact page</a>.
+      </p>
+    </div>
+  </section>
+</PageLayout>
+
+<style>
+  .page-hero {
+    padding: var(--space-3xl) 0 var(--space-xl);
+    text-align: center;
+  }
+
+  .hero-meta {
+    font-size: 0.875rem;
+    color: var(--text-muted);
+    margin-top: var(--space-md);
+  }
+
+  .section {
+    padding-bottom: var(--space-4xl);
+  }
+</style>
